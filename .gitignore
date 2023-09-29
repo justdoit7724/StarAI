@@ -19,31 +19,10 @@
 *.tlog
 *.idb
 *.cso
-<<<<<<< HEAD
 *.exp
 *.exe
-##[Dd]ebugPublic/
-=======
-*.dll
 *.lib
-[Dd]ebug/
-[Rr]elease/
-[Ww]in32/
-[Xx]64/
-
-!/DXLib/SDK/*
-!/DXLib/SDK/*.*
-!/DXLib/SDK/*/*
-!/DXLib/SDK/*/*.*
-!/DXLib/SDK/*/*/*
-!/DXLib/SDK/*/*/*.*
-!/DXLib/SDK/*/*/*/*
-!/DXLib/SDK/*/*/*/*.*
-!/DXLib/SDK/*/*/*/*/*
-!/DXLib/SDK/*/*/*/*/*.*
-*.exp
-*.exe
->>>>>>> 03_DepthPeeling
+##[Dd]ebugPublic/
 bld/
 [Oo]bj/
 [Ll]og/
@@ -352,11 +331,4 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-<<<<<<< HEAD
 
-//MyProject specific
-!x64/[Dd]ebug/assimp-vc142-mtd.dll
-=======
-/DXLib/x64/Release
-/WinAPI/x64/Release
->>>>>>> 03_DepthPeeling

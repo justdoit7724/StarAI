@@ -315,3 +315,6 @@
 [2023-09-28 오후 9:50:56] Injected into process "Chaoslauncher.exe"
 [2023-09-28 오후 9:50:56] ICC module loaded
 [2023-09-28 오후 10:19:43] ICC module unloaded
+[2023-09-29 오전 10:57:23] ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[2023-09-29 오전 10:57:23] Injected into process "Chaoslauncher.exe"
+[2023-09-29 오전 10:57:23] ICC module loaded

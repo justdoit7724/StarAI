@@ -4,7 +4,6 @@ c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\cena
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\vc143.pdb
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\vc143.idb
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\pch.obj
-c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\cenaimodule.obj
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\braininput.obj
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\brain.obj
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\theme.obj
@@ -19,6 +18,7 @@ c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\logm
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\debugmanager.obj
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\controller.obj
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\biggoal.obj
+c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\bg_test.obj
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\bg_develop.obj
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\bg_attack.obj
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\bdefinput.obj
@@ -33,9 +33,9 @@ c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\sg_a
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\mapmanager.obj
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\goal.obj
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\dllmain.obj
-c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\bg_test.obj
-c:\users\justd\onedrive\desktop\starcraft\starcraft\bwapi-data\ai\cenaimodule_d.dll
+c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\cenaimodule.obj
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\cenaimodule_d.ilk
+c:\users\justd\onedrive\desktop\starcraft\starcraft\bwapi-data\ai\cenaimodule_d.dll
 c:\users\justd\onedrive\desktop\starcraft\starcraft\bwapi-data\ai\cenaimodule_d.pdb
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\cenaimodule.tlog\cenaimodule.write.1u.tlog
 c:\users\justd\onedrive\desktop\starcraft\libraries\bwapi\cenaimodule\debug\cenaimodule.tlog\cl.command.1.tlog
