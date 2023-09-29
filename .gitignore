@@ -22,6 +22,7 @@
 *.exp
 *.exe
 *.lib
+**/*.log
 ##[Dd]ebugPublic/
 bld/
 [Oo]bj/
@@ -332,3 +333,4 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
+*log.txt
