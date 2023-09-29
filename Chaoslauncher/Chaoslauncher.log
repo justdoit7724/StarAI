@@ -1,0 +1,61 @@
+2023-09-28 오후 9:50:56 85800 Logging started
+2023-09-28 오후 9:50:56 85800 Begin Startup
+2023-09-28 오후 9:50:56 85800 Chaosauncher 0.5.4.4 on NT 6.2.9200  at C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\Chaoslauncher.exe
+2023-09-28 오후 9:50:56 85800 Load Settings
+2023-09-28 오후 9:50:56 85800 GamePath: C:\Users\justd\OneDrive\Desktop\Starcraft\Starcraft\
+2023-09-28 오후 9:50:56 85800 Load Plugins
+2023-09-28 오후 9:50:56 85800 AdvLoaderPluginPath: \Plugins\
+2023-09-28 오후 9:50:56 85800 Loading BWL4-Plugin C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\iccscbn.icc
+2023-09-28 오후 9:50:56 85800 Plugin loaded ICCup
+2023-09-28 오후 9:50:56 85800 Loading BWL4-Plugin C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\Plugins\APMAlert.bwl
+2023-09-28 오후 9:50:57 85800 Plugin loaded APMAlert (1.16.1)
+2023-09-28 오후 9:50:57 85800 Loading BWL4-Plugin C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\Plugins\BWAPI_PluginInjector.bwl
+2023-09-28 오후 9:50:57 85800 Plugin loaded BWAPI 4.4.0 Injector [RELEASE]
+2023-09-28 오후 9:50:57 85800 Loading BWL4-Plugin C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\Plugins\BWAPI_PluginInjectord.bwl
+2023-09-28 오후 9:50:57 85800 Plugin loaded BWAPI 4.4.0 Injector [DEBUG]
+2023-09-28 오후 9:50:57 85800 Loading BWL4-Plugin C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\Plugins\Chaosplugin.bwl
+2023-09-28 오후 9:50:57 85800 Plugin loaded Chaosplugin for 1.16.1
+2023-09-28 오후 9:50:57 85800 Loading BWL4-Plugin C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\Plugins\LatencyChanger.bwl
+2023-09-28 오후 9:50:57 85800 Plugin loaded LatencyChanger for 1.16.1
+2023-09-28 오후 9:50:57 85800 Loading BWL4-Plugin C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\Plugins\repfix.bwl
+2023-09-28 오후 9:50:57 85800 Plugin loaded RepFix
+2023-09-28 오후 9:50:57 85800 Loading BWL4-Plugin C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\Plugins\RWAPlayer.bwl
+2023-09-28 오후 9:50:57 85800 Plugin loaded RWAPlayer (1.16.1)
+2023-09-28 오후 9:50:57 85800 Loading BWL4-Plugin C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\Plugins\RWARecorder.bwl
+2023-09-28 오후 9:50:57 85800 Plugin loaded RWARecorder (1.16.1)
+2023-09-28 오후 9:50:57 85800 Loading BWL4-Plugin C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\Plugins\Stormplugin.bwl
+2023-09-28 오후 9:50:57 85800 Plugin loaded Stormplugin for 1.16.1
+2023-09-28 오후 9:50:57 85800 Loading BWL4-Plugin C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\Chaoslauncher\Plugins\wmode.bwl
+2023-09-28 오후 9:50:57 85800 Plugin loaded W-MODE 1.02
+2023-09-28 오후 9:50:57 85800 Load Tools
+2023-09-28 오후 9:50:57 85800 Init GUI
+2023-09-28 오후 9:50:57 85800 Get Starcraftversions
+2023-09-28 오후 9:50:57 85800 Init complete
+2023-09-28 오후 9:50:58 85800 Startbutton
+2023-09-28 오후 9:50:58 85800 Starting Game Starcraft 1.16.1 C:\Users\justd\OneDrive\Desktop\Starcraft\Starcraft\StarCraft.exe
+2023-09-28 오후 9:50:58 85800 BWAPI 4.4.0 Injector [DEBUG] Version  Compatible
+2023-09-28 오후 9:50:58 85800 W-MODE 1.02 Version 1.0.2 Compatible
+2023-09-28 오후 9:50:58 85800 Obtained DebugPrivilege
+2023-09-28 오후 9:50:58 85800 CreateProcess
+2023-09-28 오후 9:50:58 85800 Call ScSuspended for all active Plugins
+2023-09-28 오후 9:50:58 85800 ApplyPatchSuspended for BWAPI 4.4.0 Injector [DEBUG]
+2023-09-28 오후 9:50:59 85800 ApplyPatchSuspended for W-MODE 1.02
+2023-09-28 오후 9:50:59 85800 ResumeThread
+2023-09-28 오후 9:50:59 85800 WaitForInputIdle
+2023-09-28 오후 9:51:00 85800 Call ScWindowCreated for all active Plugins
+2023-09-28 오후 9:51:00 85800 ApplyPatch for BWAPI 4.4.0 Injector [DEBUG]
+2023-09-28 오후 9:51:00 85800 ApplyPatch for W-MODE 1.02
+2023-09-28 오후 9:51:00 85800 Starting Starcraft completed
+2023-09-28 오후 10:19:43 85800 Finishing
+2023-09-28 오후 10:19:43 85800 Unloading Plugin ICCup
+2023-09-28 오후 10:19:43 85800 Unloading Plugin APMAlert (1.16.1)
+2023-09-28 오후 10:19:43 85800 Unloading Plugin BWAPI 4.4.0 Injector [RELEASE]
+2023-09-28 오후 10:19:43 85800 Unloading Plugin BWAPI 4.4.0 Injector [DEBUG]
+2023-09-28 오후 10:19:43 85800 Unloading Plugin Chaosplugin for 1.16.1
+2023-09-28 오후 10:19:43 85800 Unloading Plugin LatencyChanger for 1.16.1
+2023-09-28 오후 10:19:43 85800 Unloading Plugin RepFix
+2023-09-28 오후 10:19:43 85800 Unloading Plugin RWAPlayer (1.16.1)
+2023-09-28 오후 10:19:43 85800 Unloading Plugin RWARecorder (1.16.1)
+2023-09-28 오후 10:19:43 85800 Unloading Plugin Stormplugin for 1.16.1
+2023-09-28 오후 10:19:43 85800 Unloading Plugin W-MODE 1.02
+2023-09-28 오후 10:19:43 85800 Logging ended

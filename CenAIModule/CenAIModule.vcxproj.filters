@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Goal">
+      <UniqueIdentifier>{7108f769-c3db-43d0-a8df-ba91f1dd0717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{318e457f-95d9-44db-b3e6-f1204f10221c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DesignPattern">
+      <UniqueIdentifier>{e671590f-1c53-4ada-a3e1-a841850b54db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CenAIModule.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BrainInput.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BAttInput.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BDefInput.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SmallGoal.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="Goal.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="Theme.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="TH_ZerglingBase.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapChain.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="LogManager.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>DesignPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="SG_Attack.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="SG_Build.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="SG_Gather.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="SG_Train.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="BG_Attack.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="BG_Develop.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="BigGoal.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="MapManager.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Brain.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SituationManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TechTree.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="StopWatch.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>DesignPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="SG_StartWork.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AStar.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="SG_CalcAttGatherPos.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SG_Recruit.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BG_Test.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CenAIModule.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BrainInput.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BAttInput.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BDefInput.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SmallGoal.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="Theme.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="TH_ZerglingBase.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="Goal.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="LogManager.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Observer.cpp">
+      <Filter>DesignPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="SG_Attack.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="SG_Build.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="SG_Gather.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="SG_Train.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="BG_Attack.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="BG_Develop.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="BigGoal.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="MapManager.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Brain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SituationManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TechTree.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="StopWatch.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="SG_StartWork.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AStar.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="SG_CalcAttGatherPos.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SG_Recruit.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BG_Test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
