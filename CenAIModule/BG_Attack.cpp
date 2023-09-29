@@ -13,8 +13,7 @@ BG_Attack::BG_Attack(BWAPI::TilePosition pos)
 	m_passData.dbBigGoalPos = m_attPos;
 	m_passData.attPos = Position(pos);
 	m_passData.iValues.clear();
-	//DEBUG
-	m_passData.iValues.push_back(/*6*/4);
+	m_passData.iValues.push_back(6);
 
 
 	m_subGoals.push_back(new SG_Recruit(&m_passData));

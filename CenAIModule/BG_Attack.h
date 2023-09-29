@@ -1,6 +1,5 @@
 #pragma once
 #include "BigGoal.h"
-#include "StopWatch.h"
 class BG_Attack :
     public BigGoal
 {
@@ -16,9 +15,6 @@ private:
     bool m_finish;
 
     TilePosition m_attPos;
-
-    //debug
-    StopWatch watch;
 
 };
 

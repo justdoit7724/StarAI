@@ -11,17 +11,6 @@
 
 void TH_ZerglingBase::Update(const Controller* con)
 {
-	//DEBUG
-	if(!IsGoalExist("BG_Attack"))
-	{
-
-		auto pts = SG_MAP.GetPts();
-
-		if(pts.size())
-		AddGoal("BG_Attack", new BG_Attack(pts[0]));
-	}
-
-	/*
 	auto rd = SG_SITU.UnitsInRange(true,TilePosition(32,32),  UnitTypes::Zerg_Hatchery)[0];
 
 	if (rd)
@@ -55,7 +44,6 @@ void TH_ZerglingBase::Update(const Controller* con)
 			}
 		}
 	}
-	*/
 
 	std::vector<std::string> delList;
 	for (auto it = m_goals.begin(); it != m_goals.end();it++)
