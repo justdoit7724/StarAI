@@ -10,15 +10,15 @@
 
 BG_Develop::BG_Develop(Unit resourceDepot, float e):m_resourceDepot(resourceDepot), m_e(e), m_finish(false), BigGoal("BG_Develop",Color(0,0,255))
 {
+	if (!m_resourceDepot || !m_resourceDepot->exists())
+		return;
+
 	m_passData.dbBigGoalPos = m_resourceDepot->getTilePosition();
 	m_passData.bigGoalPtr = this;
 
 	//train
 	if (m_e > 0.5)
 	{
-		int techMineral;
-		int techGas;
-		SG_TECH.GetTotalReqRes(UnitTypes::Zerg_Zergling, techMineral, techGas);
 		int curMinerals = Broodwar->self()->gatheredMinerals();
 
 		TechNode req;

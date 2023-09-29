@@ -8,7 +8,7 @@ std::vector<Color> globalDebugCol;
 std::vector<std::string> globalDebugStr;
 
 Goal::Goal(std::string id, Color debugCol)
-	:m_id(id), m_debugColor(debugCol)
+	:m_id(id), m_debugColor(debugCol), m_result(GOAL_RESULT_PROCESSING)
 {
 }
 
@@ -16,9 +16,9 @@ Goal::~Goal()
 {
 }
 
-bool Goal::Finished()
+int Goal::Finished()
 {
-	return m_isFinished;
+	return m_result;
 }
 
 void Goal::Debug()

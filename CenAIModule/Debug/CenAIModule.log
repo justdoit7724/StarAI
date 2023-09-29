@@ -1,8 +1,35 @@
 ﻿  BG_Attack.cpp
+  BG_Develop.cpp
+  BigGoal.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\BigGoal.cpp(28,3): error C2065: 'm_isFinished': 선언되지 않은 식별자입니다.
+  Brain.cpp
   CenAIModule.cpp
+  Controller.cpp
+  Goal.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\Goal.cpp(44,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  SG_Attack.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_Attack.cpp(56,3): error C2065: 'm_isFinished': 선언되지 않은 식별자입니다.
+  SG_Build.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_Build.cpp(102,9): error C2065: 'm_isFinished': 선언되지 않은 식별자입니다.
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_Build.cpp(114,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_Build.cpp(114,33): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  SG_CalcAttGatherPos.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_CalcAttGatherPos.cpp(34,92): warning C4554: '&': 연산자 우선 순위에 오류가 있는지 확인하세요. 괄호를 사용하여 우선 순위를 명확하게 지정하세요.
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_CalcAttGatherPos.cpp(45,3): error C2065: 'm_isFinished': 선언되지 않은 식별자입니다.
+  SG_Gather.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_Gather.cpp(50,3): error C2065: 'm_isFinished': 선언되지 않은 식별자입니다.
+  SG_Recruit.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_Recruit.cpp(33,3): error C2065: 'm_isFinished': 선언되지 않은 식별자입니다.
+  SG_StartWork.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_StartWork.cpp(50,13): error C2065: 'm_isFinished': 선언되지 않은 식별자입니다.
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_StartWork.cpp(56,9): error C2065: 'm_isFinished': 선언되지 않은 식별자입니다.
+  SG_Train.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_Train.cpp(71,24): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_Train.cpp(87,9): error C2065: 'm_isFinished': 선언되지 않은 식별자입니다.
+  SmallGoal.cpp
   TH_ZerglingBase.cpp
-C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\TH_ZerglingBase.cpp(20,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\TH_ZerglingBase.cpp(51,18): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\TH_ZerglingBase.cpp(71,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\TH_ZerglingBase.cpp(31,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\TH_ZerglingBase.cpp(62,18): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\TH_ZerglingBase.cpp(82,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  Theme.cpp
   코드를 생성하고 있습니다...
-  CenAIModule.vcxproj -> C:\Users\justd\OneDrive\Desktop\Starcraft\Starcraft\bwapi-data\AI\CenAIModule_d.dll

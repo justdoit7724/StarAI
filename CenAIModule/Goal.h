@@ -3,6 +3,10 @@
 class Controller;
 class BigGoal;
 
+#define GOAL_RESULT_FAILED -1
+#define GOAL_RESULT_SUCCESS 1
+#define GOAL_RESULT_PROCESSING 0
+
 class Goal
 {
 public:
@@ -20,13 +24,13 @@ public:
 	static void UpdateGlobalDebug();
 	static void AddGlobalDebug(std::string str, Color col);
 	
-	bool Finished();
+	int Finished();
 
 	const std::string m_id;
 	const Color m_debugColor;
 
 protected:
-	bool m_isFinished;
+	int m_result;
 };
 
 

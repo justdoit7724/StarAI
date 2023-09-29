@@ -8,6 +8,17 @@
 #include "DebugManager.h"
 #include "LogManager.h"
 #include "AStar.h"
+#include "StopWatch.h"
+
+TH_ZerglingBase::TH_ZerglingBase()
+{
+	m_timer = new StopWatch();
+}
+
+TH_ZerglingBase::~TH_ZerglingBase()
+{
+	delete m_timer;
+}
 
 void TH_ZerglingBase::Update(const Controller* con)
 {
@@ -55,13 +66,17 @@ void TH_ZerglingBase::Update(const Controller* con)
 			it->second[i]->Debug();
 #endif
 
-			if (it->second[i]->Finished())
+			switch(it->second[i]->Finished())
 			{
+			case GOAL_RESULT_SUCCESS:
+			case GOAL_RESULT_FAILED:
 				delete it->second[i];
 				it->second.erase(it->second.begin() + i);
-			}
-			else
+				break;
+			default:
 				i++;
+				break;
+			}
 		}
 
 		if (it->second.empty())

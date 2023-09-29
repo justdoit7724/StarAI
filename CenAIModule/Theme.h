@@ -11,6 +11,7 @@ public:
 	{
 
 	}
+	virtual ~Theme() {}
 	virtual void Update(const Controller* con)=0;
 	
 

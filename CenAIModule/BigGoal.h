@@ -12,7 +12,7 @@ class BigGoal :
 public:
     BigGoal() = delete;
     BigGoal(std::string id, Color debugCol);
-    virtual ~BigGoal() {}
+    virtual ~BigGoal() override;
 
     virtual void Update(const Controller* con) override;
 

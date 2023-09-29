@@ -105,23 +105,20 @@
     <ClInclude Include="Singleton.h">
       <Filter>DesignPattern</Filter>
     </ClInclude>
-    <ClInclude Include="SG_StartWork.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="AStar.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="SG_CalcAttGatherPos.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="SG_Recruit.h">
-      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="DebugManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="BG_Test.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="SG_CalcAttGatherPos.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="SG_Recruit.h">
+      <Filter>Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="SG_StartWork.h">
+      <Filter>Goal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -200,23 +197,20 @@
     <ClCompile Include="StopWatch.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="SG_StartWork.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="AStar.cpp">
       <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="SG_CalcAttGatherPos.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SG_Recruit.cpp">
-      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="DebugManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="BG_Test.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="SG_StartWork.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="SG_CalcAttGatherPos.cpp">
+      <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="SG_Recruit.cpp">
+      <Filter>Goal</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

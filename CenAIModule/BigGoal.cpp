@@ -8,6 +8,16 @@ BigGoal::BigGoal(std::string id, Color debugCol)
 {
 }
 
+BigGoal::~BigGoal()
+{
+	int size = m_subGoals.size();
+	for (int i = 0; i < size; ++i)
+	{
+		delete m_subGoals[0];
+		m_subGoals.erase(m_subGoals.begin());
+	}
+}
+
 void BigGoal::Update(const Controller* con)
 {
 
@@ -17,15 +27,19 @@ void BigGoal::Update(const Controller* con)
 		m_subGoals[0]->Update(con);
 		m_subGoals[0]->Debug();
 
-		if (m_subGoals[0]->Finished())
+		switch(m_subGoals[0]->Finished())
 		{
+		case GOAL_RESULT_SUCCESS:
 			delete m_subGoals[0];
 			m_subGoals.erase(m_subGoals.begin());
+			break;
+		case GOAL_RESULT_FAILED:
+		{
+			m_result = GOAL_RESULT_FAILED;
+			break;
+		}
 		}
 	}
-
-	if (m_subGoals.empty())
-		m_isFinished = true;
 
 
 
