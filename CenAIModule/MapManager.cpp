@@ -124,6 +124,19 @@ std::vector<TilePosition> MapManager::GetPts() const
     return ret;
 }
 
+bool MapManager::IsValidPos(TilePosition tpos)
+{
+    return IsValidPos(Position(tpos));
+}
+
+bool MapManager::IsValidPos(Position pos)
+{
+    int pxWidth = m_Width * 8;
+    int pxHeight = m_height * 8;
+
+    return !((pos.x <= 0 && pos.y <= 0) || pos.x >= pxWidth || pos.y >= pxHeight);
+}
+
 
 void MapManager::Update()
 {

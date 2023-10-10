@@ -3,6 +3,8 @@
 #include "DebugManager.h"
 #include "SituationManager.h"
 #include "Controller.h"
+#include "LogManager.h"
+#include "MapManager.h"
 
 SG_Gather::SG_Gather(GoalIO* passData)
 	:SmallGoal(passData,"SG_Gather", Color(100,255,100))
@@ -47,7 +49,7 @@ void SG_Gather::Update(const Controller* con)
 	}
 		break;
 	default:
-		m_isFinished=true;
+		m_result=GOAL_RESULT_SUCCESS;
 		break;
 	}
 }
@@ -63,5 +65,17 @@ void SG_Gather::Init()
 	if (m_isInitialized)
 		return;
 	m_isInitialized = true;
+
+	TilePosition tPos;
+	tPos.x = m_passData->attPos.x / 32;
+	tPos.y = m_passData->attPos.y / 32;
+
+
+	if (!SG_MAP.IsValidPos(m_passData->attPos))
+	{
+		SG_LOGMGR.Record("GOAL_EXCEPT", "unvalid attPos in Gather");
+		m_result = GOAL_RESULT_FAILED;
+		return;
+	}
 	m_pos = m_passData->attPos;
 }

@@ -18,7 +18,7 @@ Goal::~Goal()
 
 int Goal::Finished()
 {
-	return m_result;
+	return m_result!=GOAL_RESULT_PROCESSING;
 }
 
 void Goal::Debug()

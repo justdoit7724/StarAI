@@ -5,6 +5,7 @@
 #include "MapManager.h"
 #include "TechTree.h"
 #include "BG_Attack.h"
+#include "SituationManager.h"
 
 using namespace BWAPI;
 using namespace Filter;
@@ -51,6 +52,7 @@ void CenAIModule::onFrame()
     Goal::ResetGlobalDebug();
 
     SG_MAP.Update();
+    SG_SITU.Update();
     m_brain->Update(m_controller.get());
 
 

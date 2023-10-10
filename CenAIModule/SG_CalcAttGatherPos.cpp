@@ -3,6 +3,7 @@
 #include "DebugManager.h"
 #include "SituationManager.h"
 #include "MapManager.h"
+#include "LogManager.h"
 
 SG_CalcAttGatherPos::SG_CalcAttGatherPos(GoalIO* passData)
 	:SmallGoal(passData,"SG_CalcAttGatherPos", Color(0,155,155))
@@ -19,6 +20,12 @@ void SG_CalcAttGatherPos::Update(const Controller* con)
 	case 1:
 	{
 		auto units = SG_SITU.GetRegistered(m_passData->bigGoalPtr);
+		if (units.empty())
+		{
+			SG_LOGMGR.Record("GOAL_EXCEPT", "no registered unit");
+			m_result = GOAL_RESULT_FAILED;
+			return;
+		}
 		TilePosition midPos = TilePosition(0,0);
 		for (auto u : units)
 		{
@@ -42,7 +49,7 @@ void SG_CalcAttGatherPos::Update(const Controller* con)
 	}
 		break;
 	default:
-		m_isFinished = true;
+		m_result = GOAL_RESULT_SUCCESS;
 		break;
 	}
 }
@@ -66,5 +73,11 @@ void SG_CalcAttGatherPos::Init()
 		return;
 	m_isInitialized = true;
 
+	if (!SG_MAP.IsValidPos(m_passData->attPos))
+	{
+		SG_LOGMGR.Record("GOAL_EXCEPT", "unvalid attPos");
+		m_result = GOAL_RESULT_FAILED;
+		return;
+	}
 	m_attPos = m_passData->attPos;
 }

@@ -4,6 +4,7 @@
 #include "SituationManager.h"
 #include "Controller.h"
 #include "StopWatch.h"
+#include "LogManager.h"
 
 SG_Train::SG_Train(GoalIO* passData)
     :SmallGoal(passData,"SG_Train", Color(0,255,100))
@@ -63,6 +64,12 @@ void SG_Train::Update(const Controller* con)
             m_stage = (m_count<=0)? m_stage+1 : 1;
             break;
         }
+
+        if (m_eggs.empty())
+        {
+            SG_LOGMGR.Record("GOAL_EXCEPT", "not eggs - train");
+            m_result = GOAL_RESULT_FAILED;
+        }
     }
         break;
     case 4:
@@ -84,7 +91,7 @@ void SG_Train::Update(const Controller* con)
     }
         break;
     default:
-        m_isFinished = true;
+        m_result = GOAL_RESULT_SUCCESS;
         break;
     }
 }
@@ -109,6 +116,12 @@ void SG_Train::Init()
         return;
     m_isInitialized = true;
 
+    if (m_passData->units.empty() || m_passData->unitTypes.empty() || m_passData->iValues.empty())
+    {
+        SG_LOGMGR.Record("GOAL_EXCEPT", "not valid input - train");
+        m_result = GOAL_RESULT_FAILED;
+        return;
+    }
     m_trainBuilding = m_passData->units[0];
     m_type = m_passData->unitTypes[0];
     m_count = m_passData->iValues[0];

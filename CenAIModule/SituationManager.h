@@ -8,6 +8,9 @@ class BigGoal;
 class SituationManager : public Singleton<SituationManager>
 {
 public:
+
+	void Update();
+
 	bool IsExist(bool isAlly, BWAPI::UnitType type);
 	int OpenMinerals(Unit resourceDepot);
 	bool GetOpenPositionNear(TilePosition pos, TilePosition& outPos);

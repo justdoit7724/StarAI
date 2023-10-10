@@ -18,6 +18,8 @@ public:
 	float GetDef(TilePosition pos);
 	float GetTotalWeight(TilePosition pos);
 	std::vector<TilePosition> GetPts() const;
+	bool IsValidPos(TilePosition tpos);
+	bool IsValidPos(Position pos);
 
 	void Update();
 

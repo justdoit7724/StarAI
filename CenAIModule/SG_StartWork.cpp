@@ -3,6 +3,7 @@
 #include "DebugManager.h"
 #include "SituationManager.h"
 #include "Controller.h"
+#include "LogManager.h"
 
 SG_StartWork::SG_StartWork(GoalIO* passData)
     :SmallGoal(passData,"SG_StartWork",Color(255,255,0))
@@ -47,13 +48,17 @@ void SG_StartWork::Update(const Controller* con)
         }
 
         if (!isExistValidDrone)
-            m_isFinished=true;
+        {
+            SG_LOGMGR.Record("GOAL_EXCEPT", "no valid drone");
+            m_result = GOAL_RESULT_FAILED;
+            return;
+        }
     }
         break;
 
     default:
 
-        m_isFinished = true;
+        m_result = GOAL_RESULT_SUCCESS;
 
         break;
     }
@@ -75,6 +80,12 @@ void SG_StartWork::Init()
         return;
     m_isInitialized = true;
 
+    if (m_passData->units.empty() || m_passData->bValues.empty())
+    {
+        SG_LOGMGR.Record("GOAL_EXCEPT", "no valid init in StartWork");
+        m_result = GOAL_RESULT_FAILED;
+        return;
+    }
     m_rd = m_passData->units[0];
     m_isMineral = m_passData->bValues[0];
 

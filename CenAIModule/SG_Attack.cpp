@@ -3,6 +3,8 @@
 #include "DebugManager.h"
 #include "Controller.h"
 #include "SituationManager.h"
+#include "MapManager.h"
+#include "LogManager.h"
 
 SG_Attack::SG_Attack(GoalIO* passData)
 	:SmallGoal(passData, "SG_Attack", Colors::Red)
@@ -36,9 +38,6 @@ void SG_Attack::Update(const Controller* con)
 		bool isAllIdle = true;
 		for (auto u : units)
 		{
-			if (!u->exists())
-				continue;
-
 			if (!u->isIdle())
 			{
 				isAllIdle = false;
@@ -53,7 +52,7 @@ void SG_Attack::Update(const Controller* con)
 
 	default:
 
-		m_isFinished = true;
+		m_result = GOAL_RESULT_SUCCESS;
 		break;
 	}
 }
@@ -66,5 +65,13 @@ void SG_Attack::Debug()
 
 void SG_Attack::Init()
 {
+	if (!SG_MAP.IsValidPos(m_passData->attPos))
+	{
+
+		SG_LOGMGR.Record("GOAL_EXCEPT", "unvalid attPos in Attack");
+		m_result = GOAL_RESULT_FAILED;
+		return;
+	}
+
 	m_attPos = m_passData->attPos;
 }

@@ -4,6 +4,18 @@
 
 
 
+void SituationManager::Update()
+{
+	for (auto it = m_regUnits.begin(); it!= m_regUnits.end(); ++it)
+	{
+		for (auto u : it->second)
+		{
+			if(!u->exists())
+				UnregisterUnit(u);
+		}
+	}
+}
+
 bool SituationManager::IsExist(bool isAlly, BWAPI::UnitType type)
 {
 	auto unitTeam = isAlly ? Broodwar->self() : Broodwar->enemy();
