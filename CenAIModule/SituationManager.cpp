@@ -334,3 +334,13 @@ TilePosition SituationManager::GetCenterTPos(Unit unit)
 	return centerTilePosition;
 }
 
+int SituationManager::CurMineral()
+{
+	return   Broodwar->self()->gatheredMinerals() - Broodwar->self()->spentMinerals();
+}
+
+int SituationManager::CurGas()
+{
+	return   Broodwar->self()->gatheredGas() - Broodwar->self()->spentGas();
+}
+

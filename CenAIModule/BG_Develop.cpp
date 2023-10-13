@@ -19,8 +19,6 @@ BG_Develop::BG_Develop(Unit resourceDepot, float e):m_resourceDepot(resourceDepo
 	//train
 	if (m_e > 0.5)
 	{
-		int curMinerals = Broodwar->self()->gatheredMinerals();
-
 		TechNode req;
 		if (SG_TECH.IsValid(UnitTypes::Zerg_Zergling, &req))
 		{
@@ -36,7 +34,7 @@ BG_Develop::BG_Develop(Unit resourceDepot, float e):m_resourceDepot(resourceDepo
 		else
 		{
 			TilePosition tPos;
-			if (SG_SITU.GetOpenPositionNear(SG_SITU.GetCenterTPos(m_resourceDepot), tPos))
+			if (!IsGoalExist("SG_Build") && SG_SITU.GetOpenPositionNear(SG_SITU.GetCenterTPos(m_resourceDepot), tPos))
 			{
 
 				m_passData.unitTypes.clear();
@@ -88,7 +86,7 @@ BG_Develop::BG_Develop(Unit resourceDepot, float e):m_resourceDepot(resourceDepo
 		if (sunkenCount < 3)
 		{
 			TilePosition tPos;
-			if (SG_SITU.GetOpenPositionNear(m_resourceDepot->getTilePosition(), tPos))
+			if (!IsGoalExist("SG_Build") && SG_SITU.GetOpenPositionNear(m_resourceDepot->getTilePosition(), tPos))
 			{
 				m_passData.unitTypes.clear();
 				m_passData.unitTypes.push_back(UnitTypes::Zerg_Sunken_Colony);

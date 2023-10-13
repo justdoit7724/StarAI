@@ -45,8 +45,7 @@ void TH_ZerglingBase::Update(const Controller* con)
 
 
 			float e = 0;
-			int minerals = Broodwar->self()->gatheredMinerals();
-			if (minerals >= 150)
+			if (SG_SITU.CurMineral() >= 150)
 				e = 1;
 
 			if (!IsGoalExist("BG_Develop"))

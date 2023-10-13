@@ -27,6 +27,9 @@ public:
 
 	TilePosition GetCenterTPos(Unit unit);
 
+	int CurMineral();
+	int CurGas();
+
 private:
 	std::unordered_map<const BigGoal*, std::unordered_set<Unit>> m_regUnits;
 };

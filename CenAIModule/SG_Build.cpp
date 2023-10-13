@@ -4,10 +4,17 @@
 #include "SituationManager.h"
 #include "Controller.h"
 #include "LogManager.h"
+#include "StopWatch.h"
 
 SG_Build::SG_Build(GoalIO* passData)
     :SmallGoal(passData,"SG_Build",Colors::Blue), m_worker(nullptr), m_build(nullptr)
 {
+    m_timer = new StopWatch();
+}
+
+SG_Build::~SG_Build()
+{
+    delete m_timer;
 }
 
 void SG_Build::Update(const Controller* con)
@@ -29,7 +36,8 @@ void SG_Build::Update(const Controller* con)
                 continue;
 
             m_worker = u;
-            break;
+            if (m_worker->isIdle())
+                break;
         }
 
         if (m_worker)
@@ -73,8 +81,8 @@ void SG_Build::Update(const Controller* con)
             break;
         }
 
-        if (m_type.mineralPrice() <= Broodwar->self()->gatheredMinerals() &&
-            m_type.gasPrice() <= Broodwar->self()->gatheredGas())
+        if (m_type.mineralPrice() <= SG_SITU.CurMineral() &&
+            m_type.gasPrice() <= SG_SITU.CurGas())
         {
             m_stage++;
         }
@@ -95,11 +103,20 @@ void SG_Build::Update(const Controller* con)
         if (m_worker->getTilePosition() == m_tPos && m_worker->isIdle())
         {
             if (con->Build(m_worker, m_type, m_tPos))
+            {
+                m_timer->reset();
                 m_stage++;
+            }
         }
     }
         break;
     case 5:
+    {
+        if (m_timer->elapsed() > 1.5)
+            m_stage++;
+    }
+    break;
+    case 6:
     {
         auto buildings=SG_SITU.AllUnitsinRange(true, m_tPos, 100);
 
@@ -123,7 +140,7 @@ void SG_Build::Update(const Controller* con)
 
     }
         break;
-    case 6:
+    case 7:
 
         if (!m_build->exists())
         {

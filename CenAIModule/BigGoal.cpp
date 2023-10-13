@@ -32,6 +32,12 @@ void BigGoal::Update(const Controller* con)
 		case GOAL_RESULT_SUCCESS:
 			delete m_subGoals[0];
 			m_subGoals.erase(m_subGoals.begin());
+
+			if (m_subGoals.empty())
+			{
+				m_result = GOAL_RESULT_SUCCESS;
+			}
+
 			break;
 		case GOAL_RESULT_FAILED:
 		{
@@ -40,7 +46,6 @@ void BigGoal::Update(const Controller* con)
 		}
 		}
 	}
-
 
 
 }

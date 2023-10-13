@@ -15,7 +15,7 @@ void CenAIModule::onStart()
     m_brain = std::make_unique< Brain>();
     m_controller = std::make_unique< Controller>();
 
-    Broodwar->sendText("black sheep wall");
+    //Broodwar->sendText("black sheep wall");
 
     // Enable the UserInput flag, which allows us to control the bot and type messages.
     Broodwar->enableFlag(Flag::UserInput);
@@ -28,6 +28,7 @@ void CenAIModule::onStart()
     Broodwar->setCommandOptimizationLevel(2);
 
     Broodwar->setLocalSpeed(4);
+
 }
 
 void CenAIModule::onEnd(bool isWinner)
