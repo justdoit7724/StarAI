@@ -1,18 +1,27 @@
 #include "pch.h"
 #include "SituationManager.h"
 #include "DebugManager.h"
-
+#include "MapManager.h"
 
 
 void SituationManager::Update()
 {
+	std::vector<Unit> deleList;
+
 	for (auto it = m_regUnits.begin(); it!= m_regUnits.end(); ++it)
 	{
 		for (auto u : it->second)
 		{
-			if(!u->exists())
-				UnregisterUnit(u);
+			if (!u->exists())
+			{
+				deleList.push_back(u);
+			}
 		}
+	}
+
+	for (auto d : deleList)
+	{
+		UnregisterUnit(d);
 	}
 }
 
@@ -36,6 +45,7 @@ bool SituationManager::IsExist(bool isAlly, BWAPI::UnitType type)
 
 	return false;
 }
+
 
 int SituationManager::OpenMinerals(Unit resourceDepot)
 {
@@ -64,9 +74,9 @@ int SituationManager::OpenMinerals(Unit resourceDepot)
 	return val;
 }
 
-bool SituationManager::GetOpenPositionNear(TilePosition pos, TilePosition& outPos)
+bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos)
 {
-	const int LeastDistFromResource = 125;
+	const int LeastDistFromResource = 96;
 
 	outPos.x = -1;
 	outPos.y = -1;
@@ -74,7 +84,7 @@ bool SituationManager::GetOpenPositionNear(TilePosition pos, TilePosition& outPo
 	Unit gas=nullptr;
 	for (auto unit : Broodwar->getGeysers()) {
 		if (unit->isVisible()) {
-			if (unit->getDistance(Position(pos.x * 32 + 16, pos.y * 32 + 16)) < 200)
+			if (unit->getDistance(pos) < 200)
 			{
 				gas = unit;
 				break;
@@ -84,114 +94,57 @@ bool SituationManager::GetOpenPositionNear(TilePosition pos, TilePosition& outPo
 
 	const float PI = 3.14;
 	const float PI2 = 2 * PI;
-	const float rad2 = PI / 8;
-	const float dist2 = 5;
-	for (float r = 0; r <= PI2; r += rad2)
+	const float rad[3] = {
+		PI / 7,
+		 PI / 5,
+		 PI / 9
+	};
+	const float dist[3] = {
+		160, //mid
+		128, //close
+		192  //far
+	};
+	for (int i = 0; i < 3; ++i)
 	{
-		float curX, curY;
-		Rotate(pos.x, pos.y, pos.x + dist2, pos.y, r, curX, curY);
-
-		if (!IsBuildable(TilePosition(curX -1, curY -1),3,3))
-			continue;
-
-		TilePosition openPos = TilePosition(curX, curY);
-		Position pPos = Position(openPos.x * 32 + 16, openPos.y * 32 + 16);
-		auto resourcesInRange = BWAPI::Broodwar->getUnitsInRadius(pPos, LeastDistFromResource);
-		bool isNearResource = false;
-		for (auto resource : resourcesInRange) {
-
-
-			if (resource->getType().isMineralField() || resource->getType().isRefinery()) {
-
-				isNearResource = true;
-				break;
-			}
-		}
-		if (gas && gas->getDistance(pPos) < LeastDistFromResource)
-			continue;
-
-		if (isNearResource)
-			continue;
-
-
-		outPos= TilePosition(curX, curY);
-
-		return true;
-	}
-	const float rad1 = PI / 6;
-	const float dist1 = 4;
-	for (float r = 0; r <= PI2; r += rad1)
-	{
-		float curX, curY;
-		Rotate(pos.x, pos.y, pos.x + dist1, pos.y, r, curX, curY);
-		if (!IsBuildable(TilePosition(curX - 1, curY - 1), 3, 3))
-			continue;
-
-		TilePosition openPos = TilePosition(curX, curY);
-		Position pPos = Position(openPos.x * 32 + 16, openPos.y * 32 + 16);
-		auto resourcesInRange = BWAPI::Broodwar->getUnitsInRadius(pPos, LeastDistFromResource);
-		bool isNearResource = false;
-		for (auto resource : resourcesInRange) {
-
-			if (resource->getType().isMineralField() || resource->getType().isRefinery()) {
-
-				isNearResource = true;
-				break;
-			}
-		}
-		if (gas && gas->getDistance(pPos) < LeastDistFromResource)
+		for (float r = 0; r <= PI2; r += rad[i])
 		{
-			continue;
-		}
+			float curX, curY;
+			Rotate(pos.x, pos.y, pos.x + dist[i], pos.y, r, curX, curY);
+			Position curPos(curX, curY);
 
-		if (isNearResource)
-			continue;
+			if (!IsBuildable(TilePosition(curPos), 3, 3))
+				continue;
+
+			//resource skip
+			auto resourcesInRange = BWAPI::Broodwar->getUnitsInRadius(curPos, LeastDistFromResource);
+			bool isNearResource = false;
+			for (auto resource : resourcesInRange) {
 
 
+				if (resource->getType().isMineralField() || resource->getType().isRefinery()) {
 
-
-		outPos= TilePosition(curX, curY);
-		return true;
-
-	}
-	const float rad3 = PI / 10;
-	const float dist3 = 6;
-	for (float r = 0; r <= PI2; r += rad3)
-	{
-		float curX, curY;
-		Rotate(pos.x, pos.y, pos.x + dist3, pos.y, r, curX, curY);
-		if (!IsBuildable(TilePosition(curX - 1, curY - 1), 3, 3))
-			continue;
-
-		TilePosition openPos = TilePosition(curX, curY);
-		Position pPos = Position(openPos.x * 32 + 16, openPos.y * 32 + 16);
-		auto resourcesInRange = BWAPI::Broodwar->getUnitsInRadius(pPos, LeastDistFromResource);
-		bool isNearResource = false;
-		for (auto resource : resourcesInRange) {
-
-			if (resource->getType().isMineralField() || resource->getType().isRefinery()) {
-
-				isNearResource = true;
-				break;
+					isNearResource = true;
+					break;
+				}
 			}
+			if (isNearResource)
+				continue;
+			if (gas && gas->getDistance(curPos) < LeastDistFromResource)
+				continue;
+
+
+
+
+			outPos = curPos;
+
+			return true;
 		}
-		if (gas && gas->getDistance(pPos) < LeastDistFromResource)
-		{
-			continue;
-		}
-
-		if (isNearResource)
-			continue;
-
-
-		outPos= TilePosition(curX, curY);
-		return true;
 	}
 
 	return false;
 }
 
-bool SituationManager::IsBuildable(TilePosition ltPos, int w, int h)
+bool SituationManager::IsBuildable(TilePosition pos, int w, int h)
 {	
 	int maxW = Broodwar->mapWidth();
 	int maxH = Broodwar->mapHeight();
@@ -200,18 +153,23 @@ bool SituationManager::IsBuildable(TilePosition ltPos, int w, int h)
 	for (int x = 0; x < w; ++x) {
 		for (int y = 0; y < h; ++y) {
 
-			int mx = ltPos.x + x;
-			int my = ltPos.y + y;
+			int mx = pos.x + x;
+			int my = pos.y + y;
 
 			if (mx >= maxW || my >= maxH)
 				return false;
 
-			if (!BWAPI::Broodwar->isBuildable(mx, my) /*||
-				!BWAPI::Broodwar->getUnitsOnTile(mx, my, BWAPI::Filter::IsMineralField).empty() ||
-				!BWAPI::Broodwar->getUnitsOnTile(mx, my).empty() ||
-				!BWAPI::Broodwar->getUnitsOnTile(mx, my, BWAPI::Filter::IsBuilding).empty()*/) {
+			WalkPosition wPos = WalkPosition(TilePosition(mx, my));
+			wPos.x += 1;
+			wPos.y += 1;
+
+
+			int curTerr = SG_MAP.GetTerrain(wPos);
+			if (((curTerr & MAP_BUILDABLE) != MAP_BUILDABLE) ||
+				((curTerr & MAP_UNIT) == MAP_UNIT))
 				return false;
-			}
+
+
 		}
 	}
 
@@ -344,3 +302,23 @@ int SituationManager::CurGas()
 	return   Broodwar->self()->gatheredGas() - Broodwar->self()->spentGas();
 }
 
+int SituationManager::GetValidSupply()
+{
+	return Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed();
+}
+
+void SituationManager::AddDevUnit(UnitType type)
+{
+	m_devUnits.insert(type);
+}
+
+void SituationManager::RemoveDevUnit(UnitType type)
+{
+	m_devUnits.erase(type);
+}
+
+
+bool SituationManager::IsDeveloping(UnitType type)
+{
+	return m_devUnits.find(type) != m_devUnits.end();
+}

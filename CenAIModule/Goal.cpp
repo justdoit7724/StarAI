@@ -7,8 +7,8 @@ std::vector<int> globalDebugY;
 std::vector<Color> globalDebugCol;
 std::vector<std::string> globalDebugStr;
 
-Goal::Goal(std::string id, Color debugCol)
-	:m_id(id), m_debugColor(debugCol), m_result(GOAL_RESULT_PROCESSING)
+Goal::Goal(Color debugCol)
+	:m_debugColor(debugCol), m_result(GOAL_RESULT_PROCESSING)
 {
 }
 

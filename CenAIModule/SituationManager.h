@@ -13,8 +13,8 @@ public:
 
 	bool IsExist(bool isAlly, BWAPI::UnitType type);
 	int OpenMinerals(Unit resourceDepot);
-	bool GetOpenPositionNear(TilePosition pos, TilePosition& outPos);
-	bool IsBuildable(TilePosition ltPos, int w, int h);
+	bool GetOpenPositionNear(Position pos, Position& outPos);
+	bool IsBuildable(TilePosition pos, int w, int h);
 
 	void RegisterUnit(const BigGoal* goal, Unit unit);
 	void UnregisterUnit(Unit unit);
@@ -29,8 +29,14 @@ public:
 
 	int CurMineral();
 	int CurGas();
+	int GetValidSupply();
+
+	void AddDevUnit(UnitType type);
+	void RemoveDevUnit(UnitType type);
+	bool IsDeveloping(UnitType type);
 
 private:
 	std::unordered_map<const BigGoal*, std::unordered_set<Unit>> m_regUnits;
+	std::unordered_set<int> m_devUnits;
 };
 

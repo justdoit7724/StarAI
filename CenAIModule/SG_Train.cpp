@@ -7,7 +7,7 @@
 #include "LogManager.h"
 
 SG_Train::SG_Train(GoalIO* passData)
-    :SmallGoal(passData,"SG_Train", Color(0,255,100))
+    :SmallGoal(passData, Color(0,255,100))
 {
     m_timer = new StopWatch();
 }
@@ -29,11 +29,14 @@ void SG_Train::Update(const Controller* con)
     {
         const int inc = (m_type == UnitTypes::Zerg_Zergling) ? 2 : 1;
 
-        if (m_count && con->Train(m_trainBuilding, m_type))
+        if (m_count )
         {
+            con->Train(m_trainBuilding, m_type);
+
             m_count -= inc;
             m_timer->reset();
             m_stage++;
+
         }
         
 
@@ -43,7 +46,7 @@ void SG_Train::Update(const Controller* con)
     {
         auto ti = m_timer->elapsed();
 
-        if (m_timer->elapsed() > 0.4)
+        if (m_timer->elapsed() > 0.3)
         {
             m_stage++;
         }
@@ -61,7 +64,6 @@ void SG_Train::Update(const Controller* con)
             SG_SITU.RegisterUnit(m_passData->bigGoalPtr, e);
 
             m_eggs.push_back(e);
-            m_stage = (m_count<=0)? m_stage+1 : 1;
             break;
         }
 
@@ -70,6 +72,9 @@ void SG_Train::Update(const Controller* con)
             SG_LOGMGR.Record("GOAL_EXCEPT", "not eggs - train");
             m_result = GOAL_RESULT_FAILED;
         }
+
+
+        m_stage = (m_count <= 0) ? m_stage + 1 : 1;
     }
         break;
     case 4:
@@ -98,10 +103,10 @@ void SG_Train::Update(const Controller* con)
 
 void SG_Train::Debug()
 {
-    TilePosition pos = m_passData->dbBigGoalPos;
-    pos.y += 1;
+    Position pos = m_passData->dbBigGoalPos;
+    pos.y += 32;
 
-    SG_DEBUGMGR.DrawTextScn(pos, m_id);
+    SG_DEBUGMGR.DrawTextScn(pos, "Train");
     SG_DEBUGMGR.DrawBox(pos, 70, 20, m_debugColor);
 
     for (auto e : m_eggs)

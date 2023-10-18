@@ -6,12 +6,12 @@
 #include "SG_CalcAttGatherPos.h"
 #include "SituationManager.h"
 
-BG_Attack::BG_Attack(BWAPI::TilePosition pos)
-	:m_finish(false), m_attPos(pos),BigGoal("BG_Attack", Color(255,0,0))
+BG_Attack::BG_Attack(Position pos)
+	:m_finish(false), m_attPos(pos),BigGoal(Color(255,0,0))
 {
 	m_passData.bigGoalPtr = this;
 	m_passData.dbBigGoalPos = m_attPos;
-	m_passData.attPos = Position(pos);
+	m_passData.attPos = pos;
 	m_passData.iValues.clear();
 	m_passData.iValues.push_back(6);
 
@@ -44,5 +44,12 @@ void BG_Attack::Debug()
 	rpPos.y = m_attPos.y * 32 - scnPos.y;
 
 	Broodwar->drawCircle(BWAPI::CoordinateType::Screen, rpPos.x, rpPos.y, 100, m_debugColor);
+}
+
+std::string BG_Attack::ID()const
+{
+	std::string ret = "BG_Attack:" + std::to_string(m_attPos.x) + ":" + std::to_string(m_attPos.y);
+
+	return ret;
 }
 

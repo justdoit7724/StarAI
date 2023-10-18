@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Theme.h"
+#include "BigGoal.h"
 
 void Theme::Update(const Controller* con)
 {
@@ -37,12 +38,12 @@ void Theme::Update(const Controller* con)
 	}
 }
 
-bool Theme::IsGoalExist(std::string id)
+bool Theme::IsGoalExist(const BigGoal* goal)
 {
-	return ((m_goals.find(id) != m_goals.end()) && m_goals[id].size());
+	return ((m_goals.find(goal->ID()) != m_goals.end()) && m_goals[goal->ID()].size());
 }
 
-void Theme::AddGoal(std::string name, BigGoal* goal)
+void Theme::AddGoal(BigGoal* goal)
 {
-	m_goals[name].push_back(goal);
+	m_goals[goal->ID()].push_back(goal);
 }

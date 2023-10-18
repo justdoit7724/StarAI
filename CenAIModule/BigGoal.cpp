@@ -3,8 +3,8 @@
 #include "SmallGoal.h"
 #include "LogManager.h"
 
-BigGoal::BigGoal(std::string id, Color debugCol)
-	:Goal(id, debugCol)
+BigGoal::BigGoal(Color debugCol)
+	:Goal(debugCol)
 {
 }
 
@@ -48,18 +48,4 @@ void BigGoal::Update(const Controller* con)
 	}
 
 
-}
-
-bool BigGoal::IsGoalExist(std::string id)
-{
-    for (auto g : m_subGoals)
-    {
-        if (g->m_id == id)
-        {
-            return true;
-
-        }
-
-    }
-    return false;
 }

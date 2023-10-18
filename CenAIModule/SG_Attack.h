@@ -6,6 +6,7 @@ class SG_Attack :
 {
 public:
     SG_Attack(GoalIO* passData);
+    ~SG_Attack() override;
 
     void Update(const Controller* con) override;
 

@@ -11,7 +11,7 @@ class Goal
 {
 public:
 	Goal() = delete;
-	Goal(std::string id, Color debugCol = Colors::Black);
+	Goal(Color debugCol = Colors::Black);
 	virtual ~Goal();
 
 	virtual void Update(const Controller* con) = 0;
@@ -26,7 +26,6 @@ public:
 	
 	int Finished();
 
-	const std::string m_id;
 	const Color m_debugColor;
 
 protected:
@@ -38,12 +37,14 @@ struct GoalIO
 {
 	std::vector<Unit> units;
 	std::vector<UnitType> unitTypes;
-	std::vector<TilePosition> poses;
+	std::vector<UpgradeType> upgType;
+	std::vector<Position> poses;
 	std::vector<int> iValues;
 	std::vector<float> fValues;
 	std::vector<bool> bValues;
+	int curIndex;
 
-	TilePosition dbBigGoalPos;
+	Position dbBigGoalPos;
 	BigGoal* bigGoalPtr;
 	Position attPos;
 };

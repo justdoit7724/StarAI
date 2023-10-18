@@ -167,9 +167,11 @@
     <ClInclude Include="DebugManager.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="SG_CalcAttGatherPos.h" />
+    <ClInclude Include="SG_Morphing.h" />
     <ClInclude Include="SG_Recruit.h" />
     <ClInclude Include="SG_StartWork.h" />
     <ClInclude Include="Observer.h" />
+    <ClInclude Include="SG_Upgrade.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SituationManager.h" />
     <ClInclude Include="StopWatch.h" />
@@ -201,9 +203,11 @@
     <ClCompile Include="DebugManager.cpp" />
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="SG_CalcAttGatherPos.cpp" />
+    <ClCompile Include="SG_Morphing.cpp" />
     <ClCompile Include="SG_Recruit.cpp" />
     <ClCompile Include="SG_StartWork.cpp" />
     <ClCompile Include="Observer.cpp" />
+    <ClCompile Include="SG_Upgrade.cpp" />
     <ClCompile Include="SituationManager.cpp" />
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="TechTree.cpp" />

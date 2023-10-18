@@ -21,10 +21,12 @@ TechTreeZerg::TechTreeZerg()
 
 }
 
-bool TechTreeZerg::IsValid(TechNode tech, TechNode* req)
+bool TechTreeZerg::IsValid(TechNode tech, bool& isDeveloping, TechNode* req)
 {
     auto curTechTr = m_lookup[tech.Key()];
     assert(curTechTr != nullptr);
+
+    isDeveloping = false;
 
     for (auto required : curTechTr->m_children)
     {
@@ -32,8 +34,14 @@ bool TechTreeZerg::IsValid(TechNode tech, TechNode* req)
         {
             if (!SG_SITU.IsExist(true, required->m_data.unitType))
             {
-                if(req)
+                if (SG_SITU.IsDeveloping(required->m_data.unitType))
+                {
+                    isDeveloping = true;
+                }
+
+                if (req)
                     *req = required->m_data;
+
                 return false;
             }
         }

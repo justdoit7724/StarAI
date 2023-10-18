@@ -35,7 +35,7 @@ class TechTreeZerg : public Singleton< TechTreeZerg>
 public:
 	TechTreeZerg();
 		
-	bool IsValid(TechNode tech, TechNode* req=nullptr);
+	bool IsValid(TechNode tech, bool& isDeveloping, TechNode* req=nullptr);
 	void GetTotalReqRes(TechNode tech, int& mineral, int& gas);
 
 private:

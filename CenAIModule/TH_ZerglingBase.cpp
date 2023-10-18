@@ -22,11 +22,11 @@ TH_ZerglingBase::~TH_ZerglingBase()
 
 void TH_ZerglingBase::Update(const Controller* con)
 {
-	auto rd = SG_SITU.UnitsInRange(true,TilePosition(32,32),  UnitTypes::Zerg_Hatchery)[0];
+	auto rd = SG_SITU.UnitsInRange(true,TilePosition(32,32),  UnitTypes::Zerg_Hatchery);
 
-	if (rd)
+	if (rd.size())
 	{
-		auto zerglings = SG_SITU.UnitsInRange(true, rd->getTilePosition(), UnitTypes::Zerg_Zergling, 10000);
+		auto zerglings = SG_SITU.UnitsInRange(true, rd[0]->getTilePosition(), UnitTypes::Zerg_Zergling, 10000);
 		int zerglingCount = 0;
 		for (int i = 0; i < zerglings.size(); ++i)
 		{
@@ -34,23 +34,23 @@ void TH_ZerglingBase::Update(const Controller* con)
 				zerglingCount++;
 		}
 
-		if (SG_TECH.IsValid(UnitTypes::Zerg_Zergling) && zerglingCount >= 6)
+		bool isInDev;
+		if (SG_TECH.IsValid(UnitTypes::Zerg_Zergling, isInDev) && zerglingCount >= 6)
 		{
 			auto pts = SG_MAP.GetPts();
 
-			AddGoal("BG_Attack", new BG_Attack(pts[0]));
+			AddGoal(new BG_Attack(Position(pts[0])));
 		}
 		else
 		{
-
-
 			float e = 0;
 			if (SG_SITU.CurMineral() >= 150)
 				e = 1;
 
-			if (!IsGoalExist("BG_Develop"))
+			auto newGoal = new BG_Develop(rd[0], e);
+			if (!IsGoalExist(newGoal))
 			{
-				AddGoal("BG_Develop", new BG_Develop(rd, e));
+				AddGoal(newGoal);
 			}
 		}
 	}

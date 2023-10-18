@@ -7,8 +7,19 @@
 #include "LogManager.h"
 
 SG_Attack::SG_Attack(GoalIO* passData)
-	:SmallGoal(passData, "SG_Attack", Colors::Red)
+	:SmallGoal(passData, Colors::Red)
 {
+}
+
+SG_Attack::~SG_Attack()
+{
+	auto units = SG_SITU.GetRegistered(m_passData->bigGoalPtr);
+
+	for (auto u : units)
+	{
+		SG_SITU.UnregisterUnit(u);
+	}
+
 }
 
 void SG_Attack::Update(const Controller* con)
@@ -51,15 +62,14 @@ void SG_Attack::Update(const Controller* con)
 		break;
 
 	default:
-
-		m_result = GOAL_RESULT_SUCCESS;
+			m_result = GOAL_RESULT_SUCCESS;
 		break;
 	}
 }
 
 void SG_Attack::Debug()
 {
-	SG_DEBUGMGR.DrawTextScn(TilePosition(m_attPos), m_id);
+	SG_DEBUGMGR.DrawTextScn(m_attPos, "Attack");
 	SG_DEBUGMGR.DrawBox(m_attPos, 90, 30, m_debugColor);
 }
 

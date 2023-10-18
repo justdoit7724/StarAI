@@ -1,2 +1,18 @@
-﻿  CenAIModule.cpp
-  CenAIModule.vcxproj -> C:\Users\justd\OneDrive\Desktop\Starcraft\Starcraft\bwapi-data\AI\CenAIModule_d.dll
+﻿  BG_Develop.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\BG_Develop.cpp(118,48): error C2589: ')': '::' 오른쪽에 잘못된 토큰이 있습니다.
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\BG_Develop.cpp(118): error C2144: 구문 오류: unknown-type'은(는) ')' 다음에 와야 합니다.
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\BG_Develop.cpp(118,48): error C2661: 'std::vector<BWAPI::UpgradeType,std::allocator<T>>::push_back': 오버로드된 함수에서 0개의 인수를 사용하지 않습니다.
+          with
+          [
+              T=BWAPI::UpgradeType
+          ]
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\BG_Develop.cpp(118): error C2144: 구문 오류: unknown-type'은(는) ';' 다음에 와야 합니다.
+  BigGoal.cpp
+  SG_Morphing.cpp
+  SG_Upgrade.cpp
+  SG_Build.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_Build.cpp(171,35): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\SG_Build.cpp(171,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  TH_ZerglingBase.cpp
+C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\TH_ZerglingBase.cpp(31,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  코드를 생성하고 있습니다...

@@ -6,7 +6,7 @@
 #include "LogManager.h"
 
 SG_StartWork::SG_StartWork(GoalIO* passData)
-    :SmallGoal(passData,"SG_StartWork",Color(255,255,0))
+    :SmallGoal(passData,Color(255,255,0))
 {
 }
 
@@ -67,10 +67,10 @@ void SG_StartWork::Update(const Controller* con)
 
 void SG_StartWork::Debug()
 {
-    TilePosition pos = m_passData->dbBigGoalPos;
-    pos.y += 1;
+    Position pos = m_passData->dbBigGoalPos;
+    pos.y += 32;
 
-    SG_DEBUGMGR.DrawTextScn(pos, m_id);
+    SG_DEBUGMGR.DrawTextScn(pos, "StartWork");
     SG_DEBUGMGR.DrawBox(pos, 70, 20, m_debugColor);
 }
 

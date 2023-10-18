@@ -120,6 +120,12 @@
     <ClInclude Include="SG_StartWork.h">
       <Filter>Goal</Filter>
     </ClInclude>
+    <ClInclude Include="SG_Upgrade.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SG_Morphing.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -211,6 +217,12 @@
     </ClCompile>
     <ClCompile Include="SG_Recruit.cpp">
       <Filter>Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="SG_Upgrade.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SG_Morphing.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,26 +7,24 @@ void DebugManager::DrawTextFix(int x, int y, std::string str)
 	Broodwar->drawText(BWAPI::CoordinateType::Screen, x, y, "%s", str.c_str());
 }
 
-void DebugManager::DrawTextScn(TilePosition pos, std::string str)
+void DebugManager::DrawTextScn(Position pos, std::string str)
 {
 	auto scnPos = Broodwar->getScreenPosition();
 
-	Position rpPos;
-	rpPos.x = pos.x * 32 - scnPos.x;
-	rpPos.y = pos.y * 32 - scnPos.y;
+	pos.x -= scnPos.x;
+	pos.y -= scnPos.y;
 
-	Broodwar->drawText(BWAPI::CoordinateType::Screen, rpPos.x, rpPos.y, "%s", str.c_str());
+	Broodwar->drawText(BWAPI::CoordinateType::Screen, pos.x, pos.y, "%s", str.c_str());
 }
 
-void DebugManager::DrawCircle(TilePosition pos, float radius, Color col)
+void DebugManager::DrawCircle(Position pos, float radius, Color col)
 {
 	auto scnPos = Broodwar->getScreenPosition();
 
-	Position rpPos;
-	rpPos.x = pos.x * 32 - scnPos.x;
-	rpPos.y = pos.y * 32 - scnPos.y;
+	pos.x -= scnPos.x;
+	pos.y -= scnPos.y;
 
-	Broodwar->drawCircle(BWAPI::CoordinateType::Screen, rpPos.x, rpPos.y, radius, col);
+	Broodwar->drawCircle(BWAPI::CoordinateType::Screen, pos.x, pos.y, radius, col);
 }
 
 void DebugManager::DrawBox(TilePosition pos, float w, float h, Color col)

@@ -7,8 +7,8 @@ class DebugManager :
 {
 public:
     void DrawTextFix(int x,int y, std::string str);
-    void DrawTextScn(TilePosition pos, std::string str);
-    void DrawCircle(TilePosition pos, float radius, Color col);
+    void DrawTextScn(Position pos, std::string str);
+    void DrawCircle(Position pos, float radius, Color col);
     void DrawBox(TilePosition pos, float w, float h, Color col);
     void DrawBox(Position pos, float w, float h, Color col);
     void DrawLine(TilePosition p1, TilePosition p2, Color col);

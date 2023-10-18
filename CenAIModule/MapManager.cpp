@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MapManager.h"
 #include "LogManager.h"
-
+#include "SituationManager.h"
 
 
 float GetAttWeight(Unit unit, int x, int y)
@@ -32,6 +32,8 @@ MapManager::MapManager()
     std::string mapPath = __FILE__ "\\..\\";
     mapPath += mapName + ".csv";
 
+    basicMap terr1;
+    basicMap terr2;
     for (int y = 0; y < m_height; ++y)
     {
         std::vector<int> row;
@@ -51,32 +53,40 @@ MapManager::MapManager()
         }
 
 
-        m_terrain.push_back(row);
+        terr1.push_back(row);
+        terr2.push_back(row);
     }
-    weighMap m_att1;
-    weighMap m_att2;
-    weighMap m_def1;
-    weighMap m_def2;
-    weighMap m_total1;
-    weighMap m_total2;
+    weighMap att1;
+    weighMap att2;
+    weighMap def1;
+    weighMap def2;
+    weighMap total1;
+    weighMap total2;
+    basicMap state1;
+    basicMap state2;
     for (int y = 0; y < m_WeightHeight; ++y)
     {
         std::vector<float> row(m_WeightWidth, 0);
+        std::vector<int> rowInt(m_WeightWidth, 0);
 
-        m_att1.push_back(row);
-        m_att2.push_back(row);
-        m_def1.push_back(row);
-        m_def2.push_back(row);
-        m_total1.push_back(row);
-        m_total2.push_back(row);
+        att1.push_back(row);
+        att2.push_back(row);
+        def1.push_back(row);
+        def2.push_back(row);
+        total1.push_back(row);
+        total2.push_back(row);
+
+        state1.push_back(rowInt);
+        state2.push_back(rowInt);
     }
 
-    m_wmAtt = std::make_unique<SwapChain<weighMap>>(m_att1, m_att2);
-    m_wmDef = std::make_unique<SwapChain<weighMap>>(m_def1, m_def2);
-    m_wmTotal = std::make_unique<SwapChain<weighMap>>(m_total1, m_total2);
-
+    m_wmAtt = std::make_unique<SwapChain<weighMap>>(att1, att2);
+    m_wmDef = std::make_unique<SwapChain<weighMap>>(def1, def2);
+    m_wmTotal = std::make_unique<SwapChain<weighMap>>(total1, total2);
+    m_terrain = std::make_unique<SwapChain<basicMap>>(terr1, terr2);
 
     m_wPts = std::make_unique< SwapChain<weighPts>>(std::vector<std::pair<int, int>>(), std::vector<std::pair<int, int>>());
+    m_state = std::make_unique< SwapChain<basicMap>>(state1, state2);
 }
 
 int MapManager::GetWidth()
@@ -97,7 +107,7 @@ int MapManager::GetWeightHeight()
 }
 int MapManager::GetTerrain(WalkPosition pos)
 {
-    return m_terrain[pos.y][pos.x];
+    return m_terrain->Get()[pos.y][pos.x];
 }
 float MapManager::GetAtt(TilePosition pos)
 {
@@ -140,10 +150,9 @@ bool MapManager::IsValidPos(Position pos)
 
 void MapManager::Update()
 {
-    //SG_TIMER.Reset();
-
-    static int updateAttStep = 0;
-    switch (updateAttStep % 50)
+    //weight pt update
+    static long long updateStep = 0;
+    switch (updateStep % 50)
     {
     case 0:
         for (int y = 0; y < m_WeightHeight; ++y)
@@ -170,7 +179,7 @@ void MapManager::Update()
         break;
     case 3:
     {
-        updateAttStep--;
+        updateStep--;
 
         for (int i = 0; i < 2 && m_enemies.size()>0; ++i)
         {
@@ -200,7 +209,7 @@ void MapManager::Update()
 
         if (m_enemies.empty())
         {
-            updateAttStep++;
+            updateStep++;
         }
     }
 
@@ -293,7 +302,7 @@ void MapManager::Update()
     break;
     case 29:
     {
-        updateAttStep--;
+        updateStep--;
 
         for (int i = 0; i < 300 && m_sorter.size() && m_wPts->Work()->size() < WEIGHT_PT_MAX_COUNT; ++i)
         {
@@ -327,7 +336,7 @@ void MapManager::Update()
 
         if (m_sorter.empty() || m_wPts->Work()->size() >= WEIGHT_PT_MAX_COUNT)
         {
-            updateAttStep++;
+            updateStep++;
         }
 
     }
@@ -340,16 +349,67 @@ void MapManager::Update()
         m_wPts->Swap();
     }
     break;
+
+    case 32:
+        for (int y = 0; y < m_height; ++y)
+        {
+            for (int x = 0; x < m_Width; ++x)
+            {
+                (*m_terrain->Work())[y][x] = (*m_terrain->Work())[y][x] & (~MAP_UNIT);
+            }
+        }
+
+        break;
+    case 33:
+    {
+        for (auto u : Broodwar->getAllUnits())
+        {
+            m_tmpUnits.push_back(u);
+        }
+    }
+    break;
+
+    case 34:
+    {
+        for (int i = 0; i < 30 && m_tmpUnits.size(); ++i)
+        {
+            Unit u = m_tmpUnits[m_tmpUnits.size() - 1];
+            m_tmpUnits.pop_back();
+
+            if (!u->exists())
+                continue;
+            if (u->isFlying())
+                continue;
+
+            int whWidth = u->getType().tileWidth() * 4 / 2;
+            int whHeight = u->getType().tileHeight() * 4 / 2;
+            Position pos = u->getPosition();
+            WalkPosition wPos(pos);
+
+            for (int y = -whHeight; y < whHeight; ++y)
+            {
+                for (int x = -whWidth; x < whWidth; ++x)
+                {
+                    (*m_terrain->Work())[wPos.y + y][wPos.x + x] |= MAP_UNIT;
+                }
+            }
+        }
+
+        if (!m_tmpUnits.empty())
+        {
+            updateStep--;
+        }
+    }
+    break;
+    case 35:
+        m_terrain->Swap();
+        break;
     }
 
-
-
-    /*std::string log = std::to_string((updateAttStep)%50) + "," + std::to_string(SG_TIMER.ElapsedMilliseconds());
-    SG_LOGMGR.Record("DEBUG", log);*/
-
-    updateAttStep++;
+    updateStep++;
     
 
+    //location update
     
 
 }
@@ -387,6 +447,30 @@ void MapManager::DisplayAtt()
 
 void MapManager::DisplayDef()
 {
+    auto srnPos = Broodwar->getScreenPosition();
+
+    RECT screenRect;
+    const HWND hDesktop = GetDesktopWindow();
+    GetWindowRect(hDesktop, &screenRect);
+
+    for (int y = 0; y < screenRect.bottom / 8 - 1; ++y)
+    {
+        for (int x = 0; x < screenRect.right / 8 - 1; ++x)
+        {
+
+            WalkPosition pos = WalkPosition(srnPos);
+            pos.x += x;
+            pos.y += y;
+
+            if (0 > pos.x || 0 > pos.y)
+                continue;
+
+            if(SG_SITU.IsBuildable(TilePosition(pos),1,1))
+                Broodwar->drawBox(BWAPI::CoordinateType::Screen, x * 8, y * 8, x * 8 + 8, y * 8 + 8, Color(100, 100, 100));
+        }
+    }
+
+    
 }
 
 void MapManager::DisplayTerrain()
@@ -410,21 +494,28 @@ void MapManager::DisplayTerrain()
                 wPos.x >= m_Width || wPos.y >= m_height)
                 continue;
 
-            auto col = Colors::Black;
-
-            int r=0, g=0, b=0;
+            float cof = 0;
             int curTerrain = GetTerrain(wPos);
+            const float inc = 0.3333;
             if ((curTerrain & MAP_MOVABLE) == MAP_MOVABLE)
             {
-                g = 1;
+                cof += inc;
             }
             if((curTerrain & MAP_BUILDABLE) == MAP_BUILDABLE)
             {
-                b = 1;
+                cof += inc;
+            }
+            if ((curTerrain & MAP_UNIT) == MAP_UNIT)
+            {
+                cof += inc;
             }
 
+
+            int r = 0, g = 0, b = 0;
+            GetColorIntensity(cof, r, g, b);
+
             if(r||g||b)
-                Broodwar->drawDot(BWAPI::CoordinateType::Screen, x * 8 + 4, y * 8 + 4, Color(r, g, b));
+                Broodwar->drawBox(BWAPI::CoordinateType::Screen, x * 8, y * 8, x*8+8, y*8+8, Color(r, g, b));
         }
     }
 }

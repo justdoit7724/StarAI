@@ -3,23 +3,16 @@
 
 class StopWatch;
 
-class SG_Build :
+class SG_Upgrade :
     public SmallGoal
 {
-public:
-    SG_Build(GoalIO* passData);
-    ~SG_Build();
-
     void Update(const Controller* con) override;
-    void Debug()override;
+
     void Init()override;
 
 private:
-    Unit m_worker;
-    Unit m_build;
-    UnitType m_type;
-    Position m_pos;
-
+    Unit m_unit;
+    UpgradeType m_type;
     StopWatch* m_timer;
 };
 

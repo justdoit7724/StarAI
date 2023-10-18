@@ -28,6 +28,7 @@ using namespace BWAPI;
 #define WEIGHT_COUNT    1
 #define MAP_MOVABLE 1
 #define MAP_BUILDABLE 2
+#define MAP_UNIT 4
 
 inline float Clamp(float from, float to, float v)
 {

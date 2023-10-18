@@ -11,16 +11,17 @@ class BigGoal :
 {
 public:
     BigGoal() = delete;
-    BigGoal(std::string id, Color debugCol);
+    BigGoal(Color debugCol);
     virtual ~BigGoal() override;
 
     virtual void Update(const Controller* con) override;
+
+    virtual std::string ID()const = 0;
 
 protected:
     std::vector< SmallGoal*> m_subGoals;
 
     GoalIO m_passData;
 
-    bool IsGoalExist(std::string id);
 };
 

@@ -5,7 +5,7 @@
 #include "LogManager.h"
 
 SG_Recruit::SG_Recruit(GoalIO* passData)
-	:SmallGoal(passData, "SG_Recruit", Color(0, 0, 155))
+	:SmallGoal(passData, Color(0, 0, 155))
 {
 }
 void SG_Recruit::Update(const Controller* con)
@@ -42,8 +42,8 @@ void SG_Recruit::Update(const Controller* con)
 void SG_Recruit::Debug()
 {
 	auto pos = m_passData->dbBigGoalPos;
-	pos.y += 1;
-	SG_DEBUGMGR.DrawTextScn(pos, m_id);
+	pos.y += 32;
+	SG_DEBUGMGR.DrawTextScn(pos, "Recruit");
 	SG_DEBUGMGR.DrawBox(pos, 100, 30, m_debugColor);
 }
 

@@ -6,6 +6,7 @@
 #include "TechTree.h"
 #include "BG_Attack.h"
 #include "SituationManager.h"
+#include "DebugManager.h"
 
 using namespace BWAPI;
 using namespace Filter;
@@ -15,7 +16,7 @@ void CenAIModule::onStart()
     m_brain = std::make_unique< Brain>();
     m_controller = std::make_unique< Controller>();
 
-    //Broodwar->sendText("black sheep wall");
+    Broodwar->sendText("black sheep wall");
 
     // Enable the UserInput flag, which allows us to control the bot and type messages.
     Broodwar->enableFlag(Flag::UserInput);
@@ -52,9 +53,12 @@ void CenAIModule::onFrame()
 
     Goal::ResetGlobalDebug();
 
+
     SG_MAP.Update();
+    SG_MAP.DisplayDef();
     SG_SITU.Update();
     m_brain->Update(m_controller.get());
+
 
 
 

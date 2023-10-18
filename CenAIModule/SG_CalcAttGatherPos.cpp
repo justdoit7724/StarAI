@@ -6,7 +6,7 @@
 #include "LogManager.h"
 
 SG_CalcAttGatherPos::SG_CalcAttGatherPos(GoalIO* passData)
-	:SmallGoal(passData,"SG_CalcAttGatherPos", Color(0,155,155))
+	:SmallGoal(passData, Color(0,155,155))
 {
 }
 
@@ -44,7 +44,7 @@ void SG_CalcAttGatherPos::Update(const Controller* con)
 
 
 		m_passData->poses.clear();
-		m_passData->poses.push_back(TilePosition(step));
+		m_passData->poses.push_back(step);
 		m_stage++;
 	}
 		break;
@@ -56,7 +56,7 @@ void SG_CalcAttGatherPos::Update(const Controller* con)
 
 void SG_CalcAttGatherPos::Debug()
 {
-	SG_DEBUGMGR.DrawTextScn(TilePosition(m_attPos), m_id);
+	SG_DEBUGMGR.DrawTextScn(m_attPos, "CalcAttGatherPos");
 	SG_DEBUGMGR.DrawBox(m_attPos, 90, 30, m_debugColor);
 
 	auto units = SG_SITU.GetRegistered(m_passData->bigGoalPtr);

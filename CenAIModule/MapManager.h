@@ -31,10 +31,12 @@ public:
 
 private:
 
+	typedef std::vector<std::vector<int>> basicMap;
 	typedef std::vector<std::vector<float>> weighMap;
 	typedef std::vector<std::pair<int,int>> weighPts;
 	//walk pos based
-	std::vector<std::vector<int>> m_terrain;
+	std::unique_ptr<SwapChain<basicMap>> m_terrain;
+	std::vector<Unit> m_tmpUnits;
 
 	//tile pos based
 	std::unique_ptr<SwapChain<weighMap>> m_wmAtt;
@@ -53,5 +55,7 @@ private:
 	
 	std::vector<void*> m_enemies;
 
+	//not used for now
+	std::unique_ptr<SwapChain<basicMap>> m_state;
 };
 

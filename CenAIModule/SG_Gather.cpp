@@ -7,7 +7,7 @@
 #include "MapManager.h"
 
 SG_Gather::SG_Gather(GoalIO* passData)
-	:SmallGoal(passData,"SG_Gather", Color(100,255,100))
+	:SmallGoal(passData, Color(100,255,100))
 {
 }
 
@@ -56,7 +56,7 @@ void SG_Gather::Update(const Controller* con)
 
 void SG_Gather::Debug()
 {
-	SG_DEBUGMGR.DrawTextScn(TilePosition(m_pos), m_id);
+	SG_DEBUGMGR.DrawTextScn(m_pos, "Gather");
 	SG_DEBUGMGR.DrawBox(m_pos, 90, 30, m_debugColor);
 }
 

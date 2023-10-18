@@ -18,8 +18,8 @@ public:
 protected:
 	std::unordered_map<std::string, std::vector<BigGoal*>> m_goals;
 
-	bool IsGoalExist(std::string id);
-	void AddGoal(std::string name, BigGoal* goal);
+	bool IsGoalExist(const BigGoal* goal);
+	void AddGoal(BigGoal* goal);
 
 };
 

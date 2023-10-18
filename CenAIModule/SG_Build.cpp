@@ -7,14 +7,17 @@
 #include "StopWatch.h"
 
 SG_Build::SG_Build(GoalIO* passData)
-    :SmallGoal(passData,"SG_Build",Colors::Blue), m_worker(nullptr), m_build(nullptr)
+    :SmallGoal(passData,Colors::Blue),m_type(UnitTypes::None), m_worker(nullptr), m_build(nullptr)
 {
     m_timer = new StopWatch();
 }
 
 SG_Build::~SG_Build()
 {
+    SG_SITU.RemoveDevUnit(m_type);
+    SG_SITU.UnregisterUnit(m_worker);
     delete m_timer;
+
 }
 
 void SG_Build::Update(const Controller* con)
@@ -26,7 +29,7 @@ void SG_Build::Update(const Controller* con)
     {
     case 1:
     {
-        auto units= SG_SITU.UnitsInRange(true, m_tPos, UnitTypes::Zerg_Drone);
+        auto units= SG_SITU.UnitsInRange(true, TilePosition(m_pos), UnitTypes::Zerg_Drone);
         for (auto u : units)
         {
             if (!u->getType().isWorker())
@@ -62,13 +65,7 @@ void SG_Build::Update(const Controller* con)
             break;
         }
 
-        Position pos = Position(m_tPos);
-        int w = m_type.width();
-        int h = m_type.height();
-        pos.x += w / 2;
-        pos.y += h / 2;
-
-        if (con->Move(m_worker, pos))
+        if (con->Move(m_worker, m_pos))
             m_stage++;
     }
         break;
@@ -98,11 +95,15 @@ void SG_Build::Update(const Controller* con)
             break;
         }
 
-        auto pos=m_worker->getTilePosition();
-        auto idle = m_worker->isIdle();
-        if (m_worker->getTilePosition() == m_tPos && m_worker->isIdle())
+
+        if (m_worker->isIdle())
         {
-            if (con->Build(m_worker, m_type, m_tPos))
+            con->Move(m_worker, m_pos);
+        }
+
+        if (m_worker->getPosition().getDistance(m_pos) < 16)
+        {
+            if (con->Build(m_worker, m_type, TilePosition(m_pos)))
             {
                 m_timer->reset();
                 m_stage++;
@@ -118,7 +119,7 @@ void SG_Build::Update(const Controller* con)
     break;
     case 6:
     {
-        auto buildings=SG_SITU.AllUnitsinRange(true, m_tPos, 100);
+        auto buildings=SG_SITU.AllUnitsinRange(true, TilePosition(m_pos), 100);
 
 
         for (auto b : buildings)
@@ -162,12 +163,12 @@ void SG_Build::Update(const Controller* con)
 
 void SG_Build::Debug()
 {
-    SG_DEBUGMGR.DrawTextScn(m_tPos, m_id);
+    SG_DEBUGMGR.DrawTextScn(m_pos, "Build");
 
     int w=m_type.width();
     int h = m_type.height();
 
-    SG_DEBUGMGR.DrawBox(m_tPos, w, h, m_debugColor);
+    SG_DEBUGMGR.DrawBox(m_pos, w, h, m_debugColor);
 
 }
 
@@ -183,6 +184,11 @@ void SG_Build::Init()
         m_result = GOAL_RESULT_FAILED;
         return;
     }
-    m_type = m_passData->unitTypes[0];
-    m_tPos = m_passData->poses[0];
+    m_type = m_passData->unitTypes[m_passData->curIndex];
+    m_pos = m_passData->poses[m_passData->curIndex];
+
+    SG_SITU.AddDevUnit(m_type);
+
+    m_passData->curIndex++;
 }
+
