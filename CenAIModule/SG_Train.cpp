@@ -27,13 +27,11 @@ void SG_Train::Update(const Controller* con)
     {
     case 1:
     {
-        const int inc = (m_type == UnitTypes::Zerg_Zergling) ? 2 : 1;
-
         if (m_count )
         {
             con->Train(m_trainBuilding, m_type);
 
-            m_count -= inc;
+            m_count--;
             m_timer->reset();
             m_stage++;
 
@@ -127,7 +125,7 @@ void SG_Train::Init()
         m_result = GOAL_RESULT_FAILED;
         return;
     }
-    m_trainBuilding = m_passData->units[0];
-    m_type = m_passData->unitTypes[0];
-    m_count = m_passData->iValues[0];
+    m_trainBuilding = m_passData->units.front(); m_passData->units.pop();
+    m_type = m_passData->unitTypes.front(); m_passData->unitTypes.pop();
+    m_count = m_passData->iValues.front(); m_passData->iValues.pop();
 }

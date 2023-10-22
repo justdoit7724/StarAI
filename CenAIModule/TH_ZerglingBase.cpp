@@ -47,11 +47,13 @@ void TH_ZerglingBase::Update(const Controller* con)
 			if (SG_SITU.CurMineral() >= 150)
 				e = 1;
 
-			auto newGoal = new BG_Develop(rd[0], e);
+			auto newGoal = new BG_Develop(rd[0], {UnitTypes::Zerg_Zergling}, {3}, e);
 			if (!IsGoalExist(newGoal))
 			{
 				AddGoal(newGoal);
 			}
+			else
+				delete newGoal;
 		}
 	}
 

@@ -10,7 +10,7 @@ void SG_Upgrade::Update(const Controller* con)
 
     switch (m_stage)
     {
-    case 0:
+    case 1:
         //update
         if (!m_unit->exists())
         {
@@ -28,7 +28,7 @@ void SG_Upgrade::Update(const Controller* con)
         }
 
         break;
-    case 1:
+    case 2:
         //wait
         if (!m_unit->exists())
         {
@@ -61,8 +61,8 @@ void SG_Upgrade::Init()
         return;
     }
 
-    m_unit = m_passData->units[0];
-	m_type = m_passData->upgType[0];
+    m_unit = m_passData->units.front(); m_passData->units.pop();
+    m_type = m_passData->upgType.front(); m_passData->upgType.pop();
 
     SG_SITU.RegisterUnit(m_passData->bigGoalPtr, m_unit);
 }

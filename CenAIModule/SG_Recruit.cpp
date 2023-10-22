@@ -53,14 +53,14 @@ void SG_Recruit::Init()
 		return;
 	m_isInitialized = true;
 
-	if (m_passData->iValues.empty() || m_passData->iValues[0] == 0)
+	if (m_passData->iValues.empty() || m_passData->iValues.front() ==0)
 	{
 		SG_LOGMGR.Record("GOAL_EXCEPT", "no unit number assigned");
 		m_result = GOAL_RESULT_FAILED;
 		return;
 	}
 
-	m_num = m_passData->iValues[0];
+	m_num = m_passData->iValues.front(); m_passData->iValues.pop();
 
 	
 }

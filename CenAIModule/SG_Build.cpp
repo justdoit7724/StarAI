@@ -16,7 +16,11 @@ SG_Build::~SG_Build()
 {
     SG_SITU.RemoveDevUnit(m_type);
     SG_SITU.UnregisterUnit(m_worker);
+
+    m_passData->units.push(m_build);
+
     delete m_timer;
+
 
 }
 
@@ -95,13 +99,12 @@ void SG_Build::Update(const Controller* con)
             break;
         }
 
-
         if (m_worker->isIdle())
         {
             con->Move(m_worker, m_pos);
         }
 
-        if (m_worker->getPosition().getDistance(m_pos) < 16)
+        if (m_worker->getPosition().getDistance(m_pos) < 8)
         {
             if (con->Build(m_worker, m_type, TilePosition(m_pos)))
             {
@@ -119,8 +122,7 @@ void SG_Build::Update(const Controller* con)
     break;
     case 6:
     {
-        auto buildings=SG_SITU.AllUnitsinRange(true, TilePosition(m_pos), 100);
-
+        auto buildings=SG_SITU.AllUnitsinRange(true, TilePosition(m_pos), 50);
 
         for (auto b : buildings)
         {
@@ -184,11 +186,9 @@ void SG_Build::Init()
         m_result = GOAL_RESULT_FAILED;
         return;
     }
-    m_type = m_passData->unitTypes[m_passData->curIndex];
-    m_pos = m_passData->poses[m_passData->curIndex];
+    m_type = m_passData->unitTypes.front(); m_passData->unitTypes.pop();
+    m_pos = m_passData->poses.front(); m_passData->poses.pop();
 
     SG_SITU.AddDevUnit(m_type);
-
-    m_passData->curIndex++;
 }
 

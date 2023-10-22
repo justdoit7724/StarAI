@@ -30,6 +30,8 @@ void CenAIModule::onStart()
 
     Broodwar->setLocalSpeed(4);
 
+    srand(time(nullptr));
+
 }
 
 void CenAIModule::onEnd(bool isWinner)
@@ -55,7 +57,6 @@ void CenAIModule::onFrame()
 
 
     SG_MAP.Update();
-    SG_MAP.DisplayDef();
     SG_SITU.Update();
     m_brain->Update(m_controller.get());
 

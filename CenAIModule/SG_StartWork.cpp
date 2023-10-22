@@ -86,7 +86,7 @@ void SG_StartWork::Init()
         m_result = GOAL_RESULT_FAILED;
         return;
     }
-    m_rd = m_passData->units[0];
-    m_isMineral = m_passData->bValues[0];
+    m_rd = m_passData->units.front(); m_passData->units.pop();
+    m_isMineral = m_passData->bValues.front(); m_passData->bValues.pop();
 
 }

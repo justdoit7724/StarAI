@@ -15,9 +15,7 @@ class BG_Develop :
     public BigGoal
 {
 public:
-    BG_Develop(Unit resourceDepot, float e);
-
-    void Update(const Controller* con) override;
+    BG_Develop(Unit resourceDepot, std::vector<UnitType> units, std::vector<int> uCounts, float e);
 
     void Debug() override;
 

@@ -162,6 +162,7 @@
     <ClInclude Include="BDefInput.h" />
     <ClInclude Include="BG_Attack.h" />
     <ClInclude Include="BG_Develop.h" />
+    <ClInclude Include="BG_TrainTroop.h" />
     <ClInclude Include="BigGoal.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="DebugManager.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="BDefInput.cpp" />
     <ClCompile Include="BG_Attack.cpp" />
     <ClCompile Include="BG_Develop.cpp" />
+    <ClCompile Include="BG_TrainTroop.cpp" />
     <ClCompile Include="BigGoal.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="DebugManager.cpp" />

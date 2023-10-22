@@ -43,8 +43,7 @@ void SG_CalcAttGatherPos::Update(const Controller* con)
 		}
 
 
-		m_passData->poses.clear();
-		m_passData->poses.push_back(step);
+		m_passData->poses.push(step);
 		m_stage++;
 	}
 		break;

@@ -20,6 +20,8 @@ BigGoal::~BigGoal()
 
 void BigGoal::Update(const Controller* con)
 {
+	if (Finished())
+		return;
 
 	if(m_subGoals.size())
 	{

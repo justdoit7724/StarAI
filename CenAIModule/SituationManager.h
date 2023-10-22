@@ -14,6 +14,7 @@ public:
 	bool IsExist(bool isAlly, BWAPI::UnitType type);
 	int OpenMinerals(Unit resourceDepot);
 	bool GetOpenPositionNear(Position pos, Position& outPos);
+	Unit GetGasNear(Position pos);
 	bool IsBuildable(TilePosition pos, int w, int h);
 
 	void RegisterUnit(const BigGoal* goal, Unit unit);
@@ -35,8 +36,13 @@ public:
 	void RemoveDevUnit(UnitType type);
 	bool IsDeveloping(UnitType type);
 
+	void GetUnitPrice(UnitType type, int& mineral, int& gas);
+
 private:
 	std::unordered_map<const BigGoal*, std::unordered_set<Unit>> m_regUnits;
 	std::unordered_set<int> m_devUnits;
+
+
+	
 };
 

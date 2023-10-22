@@ -35,14 +35,14 @@ protected:
 
 struct GoalIO
 {
-	std::vector<Unit> units;
-	std::vector<UnitType> unitTypes;
-	std::vector<UpgradeType> upgType;
-	std::vector<Position> poses;
-	std::vector<int> iValues;
-	std::vector<float> fValues;
-	std::vector<bool> bValues;
-	int curIndex;
+	std::queue<Unit> units;
+	std::queue<UnitType> unitTypes;
+	std::queue<UpgradeType> upgType;
+	std::queue<Position> poses;
+	std::queue<int> iValues;
+	std::queue<float> fValues;
+	std::queue<bool> bValues;
+	int count;
 
 	Position dbBigGoalPos;
 	BigGoal* bigGoalPtr;

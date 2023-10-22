@@ -21,6 +21,7 @@ using namespace BWAPI;
 #include <memory>
 #include <queue>
 
+
 #define WEIGHT_MAX_HP 1200
 #define WEIGHT_MAX_DIST 30
 #define WEIGHT_PT_MAX_COUNT 5

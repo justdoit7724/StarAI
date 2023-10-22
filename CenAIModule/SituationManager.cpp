@@ -81,23 +81,14 @@ bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos)
 	outPos.x = -1;
 	outPos.y = -1;
 
-	Unit gas=nullptr;
-	for (auto unit : Broodwar->getGeysers()) {
-		if (unit->isVisible()) {
-			if (unit->getDistance(pos) < 200)
-			{
-				gas = unit;
-				break;
-			}
-		}
-	}
+	Unit gas = GetGasNear(pos);
 
 	const float PI = 3.14;
 	const float PI2 = 2 * PI;
 	const float rad[3] = {
-		PI / 7,
-		 PI / 5,
-		 PI / 9
+		PI / 6,
+		 PI / 4,
+		 PI / 7
 	};
 	const float dist[3] = {
 		160, //mid
@@ -144,6 +135,21 @@ bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos)
 	return false;
 }
 
+Unit SituationManager::GetGasNear(Position pos)
+{
+	for (auto unit : Broodwar->getGeysers()) {
+		if (unit->isVisible()) {
+			if (unit->getDistance(pos) < 300)
+			{
+				return unit;
+				break;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 bool SituationManager::IsBuildable(TilePosition pos, int w, int h)
 {	
 	int maxW = Broodwar->mapWidth();
@@ -181,13 +187,16 @@ void SituationManager::RegisterUnit(const BigGoal* goal, Unit unit)
 {
 	assert(!IsUnitRegistered(unit));
 
+	if (!unit)
+	{
+
+	}
+
 	m_regUnits[goal].insert(unit);
 ;}
 
 void SituationManager::UnregisterUnit(Unit unit)
 {
-	assert(IsUnitRegistered(unit));
-
 	for (auto g = m_regUnits.begin(); g!= m_regUnits.end(); ++g)
 	{
 		if (g->second.find(unit) == g->second.end())
@@ -321,4 +330,10 @@ void SituationManager::RemoveDevUnit(UnitType type)
 bool SituationManager::IsDeveloping(UnitType type)
 {
 	return m_devUnits.find(type) != m_devUnits.end();
+}
+
+void SituationManager::GetUnitPrice(UnitType type, int& mineral, int& gas)
+{
+	mineral = type.mineralPrice();
+	gas = type.gasPrice();
 }

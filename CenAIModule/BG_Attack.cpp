@@ -12,9 +12,7 @@ BG_Attack::BG_Attack(Position pos)
 	m_passData.bigGoalPtr = this;
 	m_passData.dbBigGoalPos = m_attPos;
 	m_passData.attPos = pos;
-	m_passData.iValues.clear();
-	m_passData.iValues.push_back(6);
-
+	m_passData.iValues.push(6);
 
 	m_subGoals.push_back(new SG_Recruit(&m_passData));
 	m_subGoals.push_back(new SG_CalcAttGatherPos(&m_passData));

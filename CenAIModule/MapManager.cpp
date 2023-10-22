@@ -386,11 +386,19 @@ void MapManager::Update()
             Position pos = u->getPosition();
             WalkPosition wPos(pos);
 
+
+
             for (int y = -whHeight; y < whHeight; ++y)
             {
                 for (int x = -whWidth; x < whWidth; ++x)
                 {
-                    (*m_terrain->Work())[wPos.y + y][wPos.x + x] |= MAP_UNIT;
+                    int my = wPos.y + y;
+                    int mx = wPos.x + x;
+
+                    if (my < 0 || mx < 0 || mx >= m_Width || my >= m_height)
+                        continue;
+
+                    (*m_terrain->Work())[my][mx] |= MAP_UNIT;
                 }
             }
         }
