@@ -8,7 +8,8 @@ enum class BG_DevelopeKind
     Train_Troop,
     Gathering,
     Build_Tech,
-    Build_Defense
+    Build_Defense,
+    Build_Gas
 };
 
 class BG_Develop :

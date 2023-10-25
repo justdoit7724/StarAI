@@ -191,6 +191,7 @@
     <ClInclude Include="SG_Gather.h" />
     <ClInclude Include="SG_Train.h" />
     <ClInclude Include="SmallGoal.h" />
+    <ClInclude Include="TH_HydraBase.h" />
     <ClInclude Include="TH_ZerglingBase.h" />
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +232,7 @@
     <ClCompile Include="SG_Gather.cpp" />
     <ClCompile Include="SG_Train.cpp" />
     <ClCompile Include="SmallGoal.cpp" />
+    <ClCompile Include="TH_HydraBase.cpp" />
     <ClCompile Include="TH_ZerglingBase.cpp" />
   </ItemGroup>
   <ItemGroup>

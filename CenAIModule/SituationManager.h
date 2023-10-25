@@ -3,16 +3,21 @@
 #include <BWAPI.h>
 
 class BigGoal;
+class StopWatch;
 
 #define SG_SITU SituationManager::Instance()
 class SituationManager : public Singleton<SituationManager>
 {
 public:
 
+	SituationManager();
+	~SituationManager();
+
 	void Update();
 
 	bool IsExist(bool isAlly, BWAPI::UnitType type);
 	int OpenMinerals(Unit resourceDepot);
+	
 	bool GetOpenPositionNear(Position pos, Position& outPos);
 	Unit GetGasNear(Position pos);
 	bool IsBuildable(TilePosition pos, int w, int h);
@@ -38,11 +43,25 @@ public:
 
 	void GetUnitPrice(UnitType type, int& mineral, int& gas);
 
+	void DisplayMinDif(Position pos);
+	float GetCurMDifAvg();
+
+	void DisplayPL(Position pos);
+	void UpdatePL(bool ally, UnitType type);
+	int GetPL();
+	void ResetPL();
+
 private:
 	std::unordered_map<const BigGoal*, std::unordered_set<Unit>> m_regUnits;
 	std::unordered_set<int> m_devUnits;
 
+	StopWatch* m_secTimer;
+	std::vector<int> m_minerals;
+	std::vector<float> m_mDifs;
+	std::vector<float> m_mDifAvgs;
+	int m_mInterval;
 
-	
+	int m_plCurTotal;
+	std::vector<int> m_plResourceTotals;
 };
 

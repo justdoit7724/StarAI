@@ -2,6 +2,21 @@
 #include "Theme.h"
 #include "BigGoal.h"
 
+Theme::Theme(std::string id):ID(id)
+{
+}
+
+Theme::~Theme()
+{
+	for (auto it = m_goals.begin(); it != m_goals.end(); it++)
+	{
+		for (int i = 0; i < it->second.size(); i++)
+		{
+			delete it->second[i];
+		}
+	}
+}
+
 void Theme::Update(const Controller* con)
 {
 

@@ -17,7 +17,8 @@ SG_Build::~SG_Build()
     SG_SITU.RemoveDevUnit(m_type);
     SG_SITU.UnregisterUnit(m_worker);
 
-    m_passData->units.push(m_build);
+    if(m_build)
+        m_passData->units.push(m_build);
 
     delete m_timer;
 
@@ -104,13 +105,28 @@ void SG_Build::Update(const Controller* con)
             con->Move(m_worker, m_pos);
         }
 
-        if (m_worker->getPosition().getDistance(m_pos) < 8)
+        if (m_worker->getPosition().getDistance(m_pos) < m_type == UnitTypes::Zerg_Extractor? 20 : 4)
         {
-            if (con->Build(m_worker, m_type, TilePosition(m_pos)))
+            TilePosition buildPos;
+            buildPos.x = (m_pos.x - m_type.width() / 2)/32;
+            buildPos.y = (m_pos.y - m_type.height() / 2)/32;
+
+            if (con->Build(m_worker, m_type, buildPos))
             {
                 m_timer->reset();
                 m_stage++;
             }
+
+            SG_DEBUGMGR.DrawUnit(m_worker, Colors::Purple);
+            SG_DEBUGMGR.DrawCircle(Position(buildPos), 8, Colors::Green);
+
+        }
+
+        if (m_timer->elapsed() > 6)
+        {
+            SG_LOGMGR.Record("GOAL_EXCEPT", "not buildable - build");
+            m_result = GOAL_RESULT_FAILED;
+            break;
         }
     }
         break;
@@ -170,7 +186,7 @@ void SG_Build::Debug()
     int w=m_type.width();
     int h = m_type.height();
 
-    SG_DEBUGMGR.DrawBox(m_pos, w, h, m_debugColor);
+    SG_DEBUGMGR.DrawBox(m_pos, w- m_type.width()/2, h- m_type.height() / 2, m_debugColor);
 
 }
 

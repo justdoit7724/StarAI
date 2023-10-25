@@ -7,14 +7,12 @@ class BigGoal;
 class Theme
 {
 public:
-	Theme() 
-	{
-
-	}
-	virtual ~Theme() {}
+	Theme(std::string id);
+	virtual ~Theme();
 	virtual void Update(const Controller* con);
-	
 
+	const std::string ID;
+	
 protected:
 	std::unordered_map<std::string, std::vector<BigGoal*>> m_goals;
 

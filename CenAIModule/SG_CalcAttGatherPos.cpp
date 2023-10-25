@@ -62,7 +62,7 @@ void SG_CalcAttGatherPos::Debug()
 
 	for (auto u : units)
 	{
-		SG_DEBUGMGR.DrawLine(TilePosition(m_attPos), u->getTilePosition(), m_debugColor);
+		SG_DEBUGMGR.DrawLine(m_attPos, u->getPosition(), m_debugColor);
 	}
 }
 

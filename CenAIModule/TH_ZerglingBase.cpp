@@ -11,6 +11,7 @@
 #include "StopWatch.h"
 
 TH_ZerglingBase::TH_ZerglingBase()
+	:Theme(ID())
 {
 	m_timer = new StopWatch();
 }
@@ -58,4 +59,9 @@ void TH_ZerglingBase::Update(const Controller* con)
 	}
 
 	Theme::Update(con);
+}
+
+std::string TH_ZerglingBase::ID()
+{
+	return "TH_ZerglingBase";
 }

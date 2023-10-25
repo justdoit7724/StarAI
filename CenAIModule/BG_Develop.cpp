@@ -19,71 +19,19 @@ BG_Develop::BG_Develop(Unit resourceDepot, std::vector<UnitType> units, std::vec
 	m_passData.dbBigGoalPos = m_resourceDepot->getPosition();
 	m_passData.bigGoalPtr = this;
 
-	int troopMinPrice = 0;
-	int troopGasPrice = 0;
-	for (int i = 0; i < units.size(); ++i)
-	{
-		int m, g;
-		SG_SITU.GetUnitPrice(units[i],m, g);
-		troopMinPrice += m * uCounts[i];
-		troopGasPrice+=g * uCounts[i];
-	}
-
-	TechNode req;
-	bool isInDev;
-	if (SG_TECH.IsValid(UnitTypes::Zerg_Zergling, isInDev, &req) && 
-		SG_SITU.CurMineral() >= troopMinPrice &&
-		SG_SITU.CurGas()>=troopGasPrice)
-	{
-		if (SG_SITU.GetValidSupply() >= 3)
-		{
-			for (int i=0; i< units.size(); ++i)
-			{
-				m_passData.unitTypes.push(units[i]);
-				m_passData.iValues.push(uCounts[i]);
-			}
-			m_passData.count = units.size();
-			m_passData.units.push(m_resourceDepot);
-
-			m_subGoals.push_back(new SG_Train(&m_passData));
-
-			m_devKind = BG_DevelopeKind::Train_Troop;
-		}
-		else
-		{
-			m_passData.unitTypes.push(UnitTypes::Zerg_Overlord);
-			m_passData.iValues.push(1);
-			m_passData.units.push(m_resourceDepot);
-
-			m_subGoals.push_back(new SG_Train(&m_passData));
-
-			m_devKind = BG_DevelopeKind::Train_Supply;
-		}
-
-	}
-	else
-	{
-		int reqMinPrice; 
-		int reqGasPrice;
-		SG_SITU.GetUnitPrice(req.unitType, reqMinPrice, reqGasPrice);
-
-		Position pos;
-		if (!isInDev && SG_SITU.CurMineral() >= reqMinPrice && SG_SITU.CurGas() >= reqGasPrice && SG_SITU.GetOpenPositionNear(m_resourceDepot->getPosition(), pos))
-		{
-
-			m_passData.unitTypes.push(req.unitType);
-			m_passData.poses.push(pos);
-
-			m_subGoals.push_back(new SG_Build(&m_passData));
-
-			m_devKind = BG_DevelopeKind::Build_Tech;
-		}
-	}
-
-	if (m_subGoals.size())
-		return;
-
 	
+	auto drones = SG_SITU.UnitsInRange(true, m_resourceDepot, UnitTypes::Zerg_Drone);
+	
+	if (SG_SITU.GetValidSupply() < 1)
+	{
+		m_passData.unitTypes.push(UnitTypes::Zerg_Overlord);
+		m_passData.iValues.push(1);
+		m_passData.units.push(m_resourceDepot);
+
+		m_subGoals.push_back(new SG_Train(&m_passData));
+
+		m_devKind = BG_DevelopeKind::Train_Supply;
+	}
 	if (SG_SITU.OpenMinerals(m_resourceDepot))
 	{
 		m_passData.unitTypes.push(UnitTypes::Zerg_Drone);
@@ -92,7 +40,6 @@ BG_Develop::BG_Develop(Unit resourceDepot, std::vector<UnitType> units, std::vec
 		m_passData.bValues.push(true);
 
 		bool isFreeWorker = false;
-		auto drones = SG_SITU.UnitsInRange(true, m_resourceDepot, UnitTypes::Zerg_Drone);
 		for (auto d : drones)
 		{
 			if (!d->isIdle())
@@ -118,42 +65,151 @@ BG_Develop::BG_Develop(Unit resourceDepot, std::vector<UnitType> units, std::vec
 		if (gas->getType() != UnitTypes::Zerg_Extractor)
 		{
 			m_passData.unitTypes.push(UnitTypes::Zerg_Extractor);
-			m_passData.units.push(gas);
+			m_passData.poses.push(gas->getPosition());
 			m_subGoals.push_back(new SG_Build(&m_passData));
+
+			m_devKind = BG_DevelopeKind::Build_Gas;
+			
 		}
 		else
 		{
-			int sunkenCount = 0;
-			sunkenCount = SG_SITU.UnitsInRange(true, m_resourceDepot->getTilePosition(), UnitTypes::Zerg_Sunken_Colony, 250).size();
-
-			if (sunkenCount < 3)
+			int gasWorkerCount = 0;
+			for (auto w : drones)
 			{
-				auto creepCount = SG_SITU.UnitsInRange(true, m_resourceDepot->getTilePosition(), UnitTypes::Zerg_Creep_Colony, 250);
-				if (creepCount.size())
+				if (w->isGatheringGas())
+					gasWorkerCount++;
+			}
+			if (gasWorkerCount < 3)
+			{
+				m_passData.unitTypes.push(UnitTypes::Zerg_Drone);
+				m_passData.iValues.push(1);
+				m_passData.units.push(m_resourceDepot);
+				m_passData.bValues.push(false);
+
+				bool isFreeWorker = false;
+				for (auto d : drones)
 				{
-					m_passData.unitTypes.push(UnitTypes::Zerg_Sunken_Colony);
-					m_passData.units.push(creepCount[0]);
+					if (!d->isIdle())
+						continue;
+					if (SG_SITU.IsUnitRegistered(d))
+						continue;
 
-					m_subGoals.push_back(new SG_Morphing(&m_passData));
-
-					m_devKind = BG_DevelopeKind::Build_Defense;
+					isFreeWorker = true;
+					break;
 				}
-				else
-				{
-					Position pos;
-					if (SG_SITU.GetOpenPositionNear(m_resourceDepot->getPosition(), pos))
-					{
-						m_passData.unitTypes.push(UnitTypes::Zerg_Creep_Colony);
-						m_passData.unitTypes.push(UnitTypes::Zerg_Sunken_Colony);
-						m_passData.poses.push(pos);
 
-						m_subGoals.push_back(new SG_Build(&m_passData));
+				if (!isFreeWorker)
+					m_subGoals.push_back(new SG_Train(&m_passData));
+				m_subGoals.push_back(new SG_StartWork(&m_passData));
+
+				m_devKind = BG_DevelopeKind::Gathering;
+			}
+			else
+			{
+
+				int sunkenCount = 0;
+				sunkenCount = SG_SITU.UnitsInRange(true, m_resourceDepot->getTilePosition(), UnitTypes::Zerg_Sunken_Colony, 250).size();
+
+				if (sunkenCount < 3)
+				{
+					auto creepCount = SG_SITU.UnitsInRange(true, m_resourceDepot->getTilePosition(), UnitTypes::Zerg_Creep_Colony, 250);
+					if (creepCount.size())
+					{
+						m_passData.unitTypes.push(UnitTypes::Zerg_Sunken_Colony);
+						m_passData.units.push(creepCount[0]);
+
 						m_subGoals.push_back(new SG_Morphing(&m_passData));
 
 						m_devKind = BG_DevelopeKind::Build_Defense;
 					}
-				}
+					else
+					{
+						Position pos;
+						if (SG_SITU.GetOpenPositionNear(m_resourceDepot->getPosition(), pos))
+						{
+							m_passData.unitTypes.push(UnitTypes::Zerg_Creep_Colony);
+							m_passData.unitTypes.push(UnitTypes::Zerg_Sunken_Colony);
+							m_passData.poses.push(pos);
 
+							m_subGoals.push_back(new SG_Build(&m_passData));
+							m_subGoals.push_back(new SG_Morphing(&m_passData));
+
+							m_devKind = BG_DevelopeKind::Build_Defense;
+						}
+					}
+
+				}
+			}
+		}
+	}
+
+
+
+
+	if (m_subGoals.size())
+		return;
+
+	/*if (SG_SITU.GetCurMDifAvg() < 17)*/
+	{
+
+		int troopMinPrice = 0;
+		int troopGasPrice = 0;
+		for (int i = 0; i < units.size(); ++i)
+		{
+			int m, g;
+			SG_SITU.GetUnitPrice(units[i], m, g);
+			troopMinPrice += m * uCounts[i];
+			troopGasPrice += g * uCounts[i];
+		}
+
+		TechNode req;
+		bool isInDev;
+		if (SG_TECH.IsValid(UnitTypes::Zerg_Zergling, isInDev, &req) &&
+			SG_SITU.CurMineral() >= troopMinPrice &&
+			SG_SITU.CurGas() >= troopGasPrice)
+		{
+			if (SG_SITU.GetValidSupply() >= 3)
+			{
+				for (int i = 0; i < units.size(); ++i)
+				{
+					m_passData.unitTypes.push(units[i]);
+					m_passData.iValues.push(uCounts[i]);
+				}
+				m_passData.count = units.size();
+				m_passData.units.push(m_resourceDepot);
+
+				m_subGoals.push_back(new SG_Train(&m_passData));
+
+				m_devKind = BG_DevelopeKind::Train_Troop;
+			}
+			else
+			{
+				m_passData.unitTypes.push(UnitTypes::Zerg_Overlord);
+				m_passData.iValues.push(1);
+				m_passData.units.push(m_resourceDepot);
+
+				m_subGoals.push_back(new SG_Train(&m_passData));
+
+				m_devKind = BG_DevelopeKind::Train_Supply;
+			}
+
+		}
+		else
+		{
+			int reqMinPrice;
+			int reqGasPrice;
+			SG_SITU.GetUnitPrice(req.unitType, reqMinPrice, reqGasPrice);
+
+			Position pos;
+			if (!isInDev && SG_SITU.CurMineral() >= reqMinPrice && SG_SITU.CurGas() >= reqGasPrice && SG_SITU.GetOpenPositionNear(m_resourceDepot->getPosition(), pos))
+			{
+
+				m_passData.unitTypes.push(req.unitType);
+				m_passData.poses.push(pos);
+
+				m_subGoals.push_back(new SG_Build(&m_passData));
+
+				m_devKind = BG_DevelopeKind::Build_Tech;
 			}
 		}
 	}

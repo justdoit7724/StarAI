@@ -35,7 +35,7 @@ void DebugManager::DrawBox(TilePosition pos, float w, float h, Color col)
 	rpPos.x = pos.x * 32 - scnPos.x;
 	rpPos.y = pos.y * 32 - scnPos.y;
 
-	Broodwar->drawBox(BWAPI::CoordinateType::Screen, rpPos.x, rpPos.y, rpPos.x+w, rpPos.y + h, col);
+	DrawBoxFix(rpPos, w, h, col);
 }
 
 void DebugManager::DrawBox(Position pos, float w, float h, Color col)
@@ -46,21 +46,33 @@ void DebugManager::DrawBox(Position pos, float w, float h, Color col)
 	rpPos.x = pos.x - scnPos.x;
 	rpPos.y = pos.y - scnPos.y;
 
-	Broodwar->drawBox(BWAPI::CoordinateType::Screen, rpPos.x, rpPos.y, rpPos.x + w, rpPos.y + h, col);
+	DrawBoxFix(rpPos, w, h, col);
 }
 
-void DebugManager::DrawLine(TilePosition p1, TilePosition p2, Color col)
+void DebugManager::DrawBoxFix(Position pos, int w, int h, Color col)
+{
+
+	Broodwar->drawBox(BWAPI::CoordinateType::Screen, pos.x, pos.y, pos.x + w, pos.y + h, col);
+
+}
+
+void DebugManager::DrawLine(Position p1, Position p2, Color col)
 {
 	auto scnPos = Broodwar->getScreenPosition();
 
 	Position rpPos1;
-	rpPos1.x = p1.x * 32 - scnPos.x;
-	rpPos1.y = p1.y * 32 - scnPos.y;
+	rpPos1.x = p1.x - scnPos.x;
+	rpPos1.y = p1.y - scnPos.y;
 	Position rpPos2;
-	rpPos2.x = p2.x * 32 - scnPos.x;
-	rpPos2.y = p2.y * 32 - scnPos.y;
+	rpPos2.x = p2.x - scnPos.x;
+	rpPos2.y = p2.y - scnPos.y;
 
-	Broodwar->drawLine(BWAPI::CoordinateType::Screen, rpPos1.x, rpPos1.y, rpPos2.x, rpPos2.y,col);
+	DrawLineFix(rpPos1, rpPos2, col);
+}
+
+void DebugManager::DrawLineFix(Position p1, Position p2, Color col)
+{
+	Broodwar->drawLine(BWAPI::CoordinateType::Screen, p1.x, p1.y, p2.x, p2.y, col);
 }
 
 void DebugManager::DrawUnit(Unit unit, Color col)
@@ -73,4 +85,9 @@ void DebugManager::DrawUnit(Unit unit, Color col)
 	pos.y -= h / 2;
 
 	DrawBox(pos, w, h, col);
+}
+
+void DebugManager::DrawDotFix(Position p, Color col)
+{
+	Broodwar->drawDot(CoordinateType::Screen, p.x, p.y, col);
 }

@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "Brain.h"
 #include "TH_ZerglingBase.h"
+#include "TH_HydraBase.h"
+#include "SituationManager.h"
+
 
 Brain::Brain()
 {
@@ -9,6 +12,14 @@ Brain::Brain()
 
 void Brain::Update(const Controller* con)
 {
+	if (SG_SITU.GetPL() < -400)
+	{
+		SG_SITU.ResetPL();
+
+		ChangTheme<TH_HydraBase>();
+	}
+
+
 	m_mainTheme->Update(con);
 
 	//zergling

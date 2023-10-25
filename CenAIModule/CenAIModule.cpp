@@ -58,6 +58,8 @@ void CenAIModule::onFrame()
 
     SG_MAP.Update();
     SG_SITU.Update();
+    SG_SITU.DisplayMinDif(Position(15,20));
+    SG_SITU.DisplayPL(Position(15, 80));
     m_brain->Update(m_controller.get());
 
 
@@ -107,6 +109,8 @@ void CenAIModule::onUnitCreate(BWAPI::Unit unit)
 
 void CenAIModule::onUnitDestroy(BWAPI::Unit unit)
 {
+    SG_SITU.UpdatePL(unit->getPlayer() == Broodwar->self(), unit->getType());
+
 }
 
 void CenAIModule::onUnitMorph(BWAPI::Unit unit)

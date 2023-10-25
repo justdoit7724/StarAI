@@ -2,7 +2,20 @@
 #include "SituationManager.h"
 #include "DebugManager.h"
 #include "MapManager.h"
+#include "StopWatch.h"
 
+
+SituationManager::SituationManager()
+	:m_plCurTotal(0)
+{
+	m_mInterval = 20;
+	m_secTimer = new StopWatch();
+}
+
+SituationManager::~SituationManager()
+{
+	delete m_secTimer;
+}
 
 void SituationManager::Update()
 {
@@ -23,6 +36,41 @@ void SituationManager::Update()
 	{
 		UnregisterUnit(d);
 	}
+
+	if (m_secTimer->elapsed() > 1)
+	{
+		m_secTimer->reset();
+
+		m_minerals.push_back(CurMineral());
+
+		if (m_minerals.size() >= 2)
+		{
+			m_mDifs.push_back(m_minerals[m_minerals.size()-1] - m_minerals[m_minerals.size()-2]);
+		}
+
+		float total = 0; 
+		auto it = m_mDifs.rbegin();
+		for (int i = 0; i < m_mInterval && it!=m_mDifs.rend(); ++i)
+		{
+			total += *it;
+			it++;
+		}
+		m_mDifAvgs.push_back(total / m_mInterval);
+		
+		if (m_minerals.size() > (m_mInterval * 2))
+			m_minerals.erase(m_minerals.begin());
+		if (m_mDifs.size() > m_mInterval)
+			m_mDifs.erase(m_mDifs.begin());
+		if (m_mDifAvgs.size() > 50)
+			m_mDifAvgs.erase(m_mDifAvgs.begin());
+
+
+		m_plResourceTotals.push_back(m_plCurTotal);
+		if (m_plResourceTotals.size() > 50)
+			m_plResourceTotals.erase(m_plResourceTotals.begin());
+	}
+
+	
 }
 
 bool SituationManager::IsExist(bool isAlly, BWAPI::UnitType type)
@@ -85,51 +133,61 @@ bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos)
 
 	const float PI = 3.14;
 	const float PI2 = 2 * PI;
-	const float rad[3] = {
-		PI / 6,
-		 PI / 4,
-		 PI / 7
+	const float rad[2] = {
+		PI / 4,
+		 PI / 6
 	};
-	const float dist[3] = {
-		160, //mid
-		128, //close
-		192  //far
+	const float dist[2] = {
+		140, //close
+		220  //far
 	};
-	for (int i = 0; i < 3; ++i)
+
+	std::vector<std::pair<float, float>> ptList;
+
+	for (int i = 0; i < 2; ++i)
 	{
 		for (float r = 0; r <= PI2; r += rad[i])
 		{
-			float curX, curY;
-			Rotate(pos.x, pos.y, pos.x + dist[i], pos.y, r, curX, curY);
-			Position curPos(curX, curY);
-
-			if (!IsBuildable(TilePosition(curPos), 3, 3))
-				continue;
-
-			//resource skip
-			auto resourcesInRange = BWAPI::Broodwar->getUnitsInRadius(curPos, LeastDistFromResource);
-			bool isNearResource = false;
-			for (auto resource : resourcesInRange) {
-
-
-				if (resource->getType().isMineralField() || resource->getType().isRefinery()) {
-
-					isNearResource = true;
-					break;
-				}
-			}
-			if (isNearResource)
-				continue;
-			if (gas && gas->getDistance(curPos) < LeastDistFromResource)
-				continue;
-
-
-
-
-			outPos = curPos;
-
-			return true;
+			ptList.push_back({dist[i], r});
 		}
+	}
+	for (int i = 0; i < ptList.size() / 2; ++i)
+	{
+		swap(ptList[rand() % ptList.size()], ptList[rand() % ptList.size()]);
+	}
+	for (auto& p  : ptList)
+	{
+		float curX, curY;
+		Rotate(pos.x, pos.y, pos.x + p.first, pos.y, p.second, curX, curY);
+		Position curPos(curX-32, curY-32);
+
+		if (!IsBuildable(TilePosition(curPos), 3, 3))
+			continue;
+
+		//resource skip
+		auto resourcesInRange = BWAPI::Broodwar->getUnitsInRadius(curPos, LeastDistFromResource);
+		bool isNearResource = false;
+		for (auto resource : resourcesInRange) {
+
+
+			if (resource->getType().isMineralField() || resource->getType().isRefinery()) {
+
+				isNearResource = true;
+				break;
+			}
+		}
+		if (isNearResource)
+			continue;
+		if (gas && gas->getDistance(curPos) < LeastDistFromResource)
+			continue;
+
+
+
+
+		outPos = curPos;
+
+		return true;
+		
 	}
 
 	return false;
@@ -137,9 +195,11 @@ bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos)
 
 Unit SituationManager::GetGasNear(Position pos)
 {
+	const int range = 300;
+
 	for (auto unit : Broodwar->getGeysers()) {
 		if (unit->isVisible()) {
-			if (unit->getDistance(pos) < 300)
+			if (unit->getDistance(pos) < range)
 			{
 				return unit;
 				break;
@@ -147,7 +207,9 @@ Unit SituationManager::GetGasNear(Position pos)
 		}
 	}
 
-	return nullptr;
+	auto gasUnits = UnitsInRange(true, TilePosition(pos), UnitTypes::Zerg_Extractor, range);
+
+	return gasUnits.size()? gasUnits[0]:nullptr;
 }
 
 bool SituationManager::IsBuildable(TilePosition pos, int w, int h)
@@ -165,7 +227,10 @@ bool SituationManager::IsBuildable(TilePosition pos, int w, int h)
 			if (mx >= maxW || my >= maxH)
 				return false;
 
-			WalkPosition wPos = WalkPosition(TilePosition(mx, my));
+			TilePosition mtPos = TilePosition(mx, my);
+			if (!Broodwar->hasCreep(mtPos))
+				return false;
+			WalkPosition wPos = WalkPosition();
 			wPos.x += 1;
 			wPos.y += 1;
 
@@ -336,4 +401,142 @@ void SituationManager::GetUnitPrice(UnitType type, int& mineral, int& gas)
 {
 	mineral = type.mineralPrice();
 	gas = type.gasPrice();
+}
+
+void SituationManager::DisplayMinDif(Position pos)
+{
+	//axis
+	const int h = 40;
+	const int w = 200;
+	const float center = 0.7;
+	const int xUnitCount = 30;
+	int wUnit = w * center / 30;
+	SG_DEBUGMGR.DrawBoxFix(pos, w+2, h+4, Colors::Green);
+
+	//0
+	SG_DEBUGMGR.DrawLineFix(Position(pos.x, pos.y + h / 2), Position(pos.x+w,pos.y+h/2), Colors::Red);
+
+	//cur
+	Position curLineCPos = Position(pos.x + w * center, pos.y+h/2);
+	SG_DEBUGMGR.DrawLineFix(Position(curLineCPos.x, curLineCPos.y-h/2), Position(curLineCPos.x, curLineCPos.y + h / 2), Colors::Orange);
+
+	//datas
+	float curMaxVal = 10;
+	for (int i = 0; i<m_mDifAvgs.size() && i < xUnitCount; ++i)
+	{
+		if (abs(m_mDifAvgs[m_mDifAvgs.size() - 1 - i]) > curMaxVal)
+		{
+			curMaxVal += 10;
+		}
+	}
+
+	SG_DEBUGMGR.DrawTextFix(pos.x, pos.y - 13, "Mineral diff avg (-"+ std::to_string((int)curMaxVal)+"~"+ std::to_string((int)curMaxVal)+")");
+
+	int curDrawX = curLineCPos.x;
+	Position prevPt = Position(0,0);
+	for (int i=m_mDifAvgs.size()-1; i>=0; i--)
+	{
+		float my = (-m_mDifAvgs[i] / curMaxVal) * h/2;
+
+		Position newPt = Position(curDrawX, curLineCPos.y + my);
+		SG_DEBUGMGR.DrawLineFix(newPt, prevPt == Position(0,0)?newPt:prevPt, m_mDifAvgs[i]>=0? Colors::Cyan : Colors::Red);
+
+		prevPt = newPt;
+
+		curDrawX -= wUnit;
+		if (curDrawX < pos.x)
+			break;
+	}
+
+	if (m_mDifAvgs.size())
+	{
+		float my = (-m_mDifAvgs.back() / curMaxVal) * h / 2;
+
+		Position newPt = Position(curLineCPos.x, curLineCPos.y + my);
+		SG_DEBUGMGR.DrawLineFix(newPt, Position(pos.x+w, newPt.y), m_mDifAvgs.back() >= 0 ? Colors::Cyan : Colors::Red);
+
+	}
+}
+
+float SituationManager::GetCurMDifAvg()
+{
+	return m_mDifAvgs.size()? m_mDifAvgs.back() : 0;
+}
+
+void SituationManager::DisplayPL(Position pos)
+{
+	//axis
+	const int h = 40;
+	const int w = 200;
+	const float center = 0.7;
+	const int xUnitCount = 30;
+	int wUnit = w * center / 30;
+	SG_DEBUGMGR.DrawBoxFix(pos, w + 2, h + 4, Colors::Green);
+
+	//0
+	SG_DEBUGMGR.DrawLineFix(Position(pos.x, pos.y + h / 2), Position(pos.x + w, pos.y + h / 2), Colors::Red);
+
+	//cur
+	Position curLineCPos = Position(pos.x + w * center, pos.y + h / 2);
+	SG_DEBUGMGR.DrawLineFix(Position(curLineCPos.x, curLineCPos.y - h / 2), Position(curLineCPos.x, curLineCPos.y + h / 2), Colors::Orange);
+
+	//datas
+	float curMaxVal = 100;
+	for (int i = 0; i < m_plResourceTotals.size() && i < xUnitCount; ++i)
+	{
+		auto val = abs(m_plResourceTotals[m_plResourceTotals.size() - 1 - i]);
+		auto newMaxVal = (val / 250 + 1) * 250;
+
+		if (newMaxVal > curMaxVal)
+		{
+			curMaxVal = newMaxVal;
+		}
+	}
+
+	SG_DEBUGMGR.DrawTextFix(pos.x, pos.y - 13, "Profit & Loss (-" + std::to_string((int)curMaxVal) + "~" + std::to_string((int)curMaxVal) + ")");
+
+	int curDrawX = curLineCPos.x;
+	Position prevPt = Position(0, 0);
+	for (int i = m_plResourceTotals.size() - 1; i >= 0; i--)
+	{
+		float my = (-m_plResourceTotals[i] / curMaxVal) * h / 2;
+
+		Position newPt = Position(curDrawX, curLineCPos.y + my);
+		SG_DEBUGMGR.DrawLineFix(newPt, prevPt == Position(0, 0) ? newPt : prevPt, m_plResourceTotals[i] >= 0 ? Colors::Cyan : Colors::Red);
+
+		prevPt = newPt;
+
+		curDrawX -= wUnit;
+		if (curDrawX < pos.x)
+			break;
+	}
+
+	if (m_plResourceTotals.size())
+	{
+		float my = (-m_plResourceTotals.back() / curMaxVal) * h / 2;
+
+		Position newPt = Position(curLineCPos.x, curLineCPos.y + my);
+		SG_DEBUGMGR.DrawLineFix(newPt, Position(pos.x + w, newPt.y), m_plResourceTotals.back() >= 0 ? Colors::Cyan : Colors::Red);
+
+	}
+}
+
+void SituationManager::UpdatePL(bool ally, UnitType type)
+{
+	int price =  type.gasPrice() + type.mineralPrice();
+
+	if (ally)
+		price *= -1;
+
+	m_plCurTotal += price;
+}
+
+int SituationManager::GetPL()
+{
+	return m_plCurTotal;
+}
+
+void SituationManager::ResetPL()
+{
+	m_plCurTotal = 0;
 }

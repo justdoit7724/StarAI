@@ -14,6 +14,8 @@ public:
 
     void Update(const Controller* con) override;
 
+    static std::string ID();
+
 private:
     StopWatch* m_timer;
 };
