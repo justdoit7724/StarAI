@@ -14,47 +14,70 @@ TH_ZerglingBase::TH_ZerglingBase()
 	:Theme(ID())
 {
 	m_timer = new StopWatch();
+	m_timer2 = new StopWatch();
+	m_zerglingCount = 6;
+	m_plCompensate = 0;
 }
 
 TH_ZerglingBase::~TH_ZerglingBase()
 {
 	delete m_timer;
+	delete m_timer2;
 }
 
 void TH_ZerglingBase::Update(const Controller* con)
 {
-	auto rd = SG_SITU.UnitsInRange(true,TilePosition(32,32),  UnitTypes::Zerg_Hatchery);
-
-	if (rd.size())
+	if (m_timer2->elapsed() > 5)
 	{
-		auto zerglings = SG_SITU.UnitsInRange(true, rd[0]->getTilePosition(), UnitTypes::Zerg_Zergling, 10000);
-		int zerglingCount = 0;
-		for (int i = 0; i < zerglings.size(); ++i)
+		m_timer2->reset();
+
+		auto mPL = SG_SITU.GetPL() + m_plCompensate;
+		if (mPL < -150)
 		{
-			if (!SG_SITU.IsUnitRegistered(zerglings[i]))
-				zerglingCount++;
+			m_zerglingCount += 2;
+			m_plCompensate += 150;
 		}
+	}
 
-		bool isInDev;
-		if (SG_TECH.IsValid(UnitTypes::Zerg_Zergling, isInDev) && zerglingCount >= 6)
+	SG_DEBUGMGR.DrawTextFix(100, 100, std::to_string(m_zerglingCount));
+
+	if (m_timer->elapsed() > 0.5)
+	{
+		m_timer->reset();
+
+		auto rd = SG_SITU.UnitsInRange(true, TilePosition(32, 32), UnitTypes::Zerg_Hatchery);
+		if (rd.size())
 		{
-			auto pts = SG_MAP.GetPts();
+			std::vector<UnitType> units;
+			std::vector<int> unitCounts;
+			units.push_back(UnitTypes::Zerg_Zergling);
+			unitCounts.push_back(m_zerglingCount);
 
-			AddGoal(new BG_Attack(Position(pts[0])));
-		}
-		else
-		{
-			float e = 0;
-			if (SG_SITU.CurMineral() >= 150)
-				e = 1;
-
-			auto newGoal = new BG_Develop(rd[0], {UnitTypes::Zerg_Zergling}, {3}, e);
-			if (!IsGoalExist(newGoal))
+			bool isTroopReady = true;
+			for (int i = 0; i < units.size(); ++i)
 			{
-				AddGoal(newGoal);
+				auto curUnits = SG_SITU.UnitsInRange(true, rd[0]->getTilePosition(), units[i], 10000);
+				int curUnitCount = 0;
+				for (int i = 0; i < curUnits.size(); ++i)
+				{
+					if (!SG_SITU.IsUnitRegistered(curUnits[i]))
+						curUnitCount++;
+				}
+				if (curUnitCount < unitCounts[i])
+				{
+					isTroopReady = false;
+					break;
+				}
 			}
-			else
-				delete newGoal;
+
+			if (isTroopReady)
+			{
+				auto pts = SG_MAP.GetPts();
+
+				AddGoal(new BG_Attack(Position(pts[0]), units,unitCounts));
+			}
+
+			AddGoal(new BG_Develop(rd[0], units, unitCounts, 0));
 		}
 	}
 

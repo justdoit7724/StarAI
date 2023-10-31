@@ -12,7 +12,7 @@ Brain::Brain()
 
 void Brain::Update(const Controller* con)
 {
-	if (SG_SITU.GetPL() < -400)
+	if (SG_SITU.GetPL() < -500)
 	{
 		SG_SITU.ResetPL();
 

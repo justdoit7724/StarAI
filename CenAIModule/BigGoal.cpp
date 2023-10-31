@@ -51,3 +51,15 @@ void BigGoal::Update(const Controller* con)
 
 
 }
+
+void BigGoal::Init()
+{
+	if (m_isInitialized)
+		return;
+	m_isInitialized = true;
+
+	for (int i=0; i< ((int)m_subGoals.size()-1); ++i)
+	{
+		m_passData.nextSmallGoalPtr[m_subGoals[i]] = m_subGoals[i + 1];
+	}
+}

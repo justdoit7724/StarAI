@@ -12,7 +12,8 @@ public:
     void Init()override;
 
 private:
-    int m_num;
+    std::vector<int> m_unitCounts;
+    std::vector<UnitType> m_units;
 
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "SwapChain.h"
 #include "Singleton.h"
+#include "AStar.h"
 
 #define SG_MAP MapManager::Instance()
 class MapManager : public Singleton<MapManager>
@@ -8,6 +9,7 @@ class MapManager : public Singleton<MapManager>
 public:
 
 	MapManager();
+	~MapManager();
 
 	int GetWidth();
 	int GetHeight();
@@ -28,6 +30,8 @@ public:
 	void DisplayTerrain();
 	void DisplayTotal();
 	void DisplayPts();
+
+	Position GetExpPt();
 
 private:
 
@@ -57,5 +61,16 @@ private:
 
 	//not used for now
 	std::unique_ptr<SwapChain<basicMap>> m_state;
+
+	//expansion
+	bool m_isFoundExpansion;
+	AStar::Generator* m_generator;
+	Unit m_myRD;
+	Unit m_emRD;
+	AStar::CoordinateList m_path;
+	std::vector<Unit> m_expMinerals;
+	Unit m_expGas;
+	std::vector<Position> m_expPts;
+	Position m_expPt;
 };
 

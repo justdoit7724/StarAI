@@ -10,8 +10,8 @@ SG_Morphing::SG_Morphing(GoalIO* passData)
 
 SG_Morphing::~SG_Morphing()
 {
+    SG_SITU.RemoveDevUnit(m_passData->devs[this][0].first);
     SG_SITU.UnregisterUnit(m_unit);
-    SG_SITU.RemoveDevUnit(m_type);
 }
 
 void SG_Morphing::Update(const Controller* con)
@@ -61,15 +61,16 @@ void SG_Morphing::Init()
 		return;
 	m_isInitialized = true;
 
-    if (m_passData->unitTypes.empty() || m_passData->units.empty())
+    if (m_passData->unitTypes[this].empty() || m_passData->units[this].empty())
     {
         SG_LOGMGR.Record("GOAL_EXCEPT", "not valid input - morphing");
         m_result = GOAL_RESULT_FAILED;
         return;
     }
-    m_type = m_passData->unitTypes.front(); m_passData->unitTypes.pop();
-    m_unit = m_passData->units.front(); m_passData->units.pop();
+    m_type = m_passData->unitTypes[this][0];
+    m_unit = m_passData->units[this][0];
 
-    SG_SITU.AddDevUnit(m_type);
     SG_SITU.RegisterUnit(m_passData->bigGoalPtr, m_unit);
+
+    SG_SITU.AddDevUnit(m_passData->devs[this][0].first);
 }

@@ -61,8 +61,8 @@ void SG_Upgrade::Init()
         return;
     }
 
-    m_unit = m_passData->units.front(); m_passData->units.pop();
-    m_type = m_passData->upgType.front(); m_passData->upgType.pop();
+    m_unit = m_passData->units[this][0];
+    m_type = m_passData->upgType[this][0];
 
     SG_SITU.RegisterUnit(m_passData->bigGoalPtr, m_unit);
 }

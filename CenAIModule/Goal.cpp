@@ -8,7 +8,7 @@ std::vector<Color> globalDebugCol;
 std::vector<std::string> globalDebugStr;
 
 Goal::Goal(Color debugCol)
-	:m_debugColor(debugCol), m_result(GOAL_RESULT_PROCESSING)
+	:m_debugColor(debugCol), m_result(GOAL_RESULT_PROCESSING), m_isInitialized(false)
 {
 }
 

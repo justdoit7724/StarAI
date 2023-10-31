@@ -70,7 +70,19 @@ void SituationManager::Update()
 			m_plResourceTotals.erase(m_plResourceTotals.begin());
 	}
 
-	
+	int dx = 10;
+	int dy = 130;
+	for (auto units : m_devUnits)
+	{
+		if (units.second <= 0)
+			continue;
+		UnitType ut = (UnitType)units.first;
+
+		std::string str = ut.getName() + ":" + std::to_string(units.second);
+
+		SG_DEBUGMGR.DrawTextFix(dx, dy, str);
+		dy += 15;
+	}
 }
 
 bool SituationManager::IsExist(bool isAlly, BWAPI::UnitType type)
@@ -85,6 +97,9 @@ bool SituationManager::IsExist(bool isAlly, BWAPI::UnitType type)
 		if (!u->exists())
 			continue;
 
+		if (u->isMorphing())
+			continue;
+
 		if (u->getType() != type)
 			continue;
 
@@ -97,7 +112,7 @@ bool SituationManager::IsExist(bool isAlly, BWAPI::UnitType type)
 
 int SituationManager::OpenMinerals(Unit resourceDepot)
 {
-	auto mineralUnits = resourceDepot->getUnitsInRadius(300, BWAPI::Filter::IsMineralField); 
+	auto mineralUnits = GetMineralsNear(resourceDepot->getPosition());
 	auto workerUnits = resourceDepot->getUnitsInRadius(300, BWAPI::Filter::IsWorker);
 
 	int workingCount = 0;
@@ -133,18 +148,20 @@ bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos)
 
 	const float PI = 3.14;
 	const float PI2 = 2 * PI;
-	const float rad[2] = {
-		PI / 4,
-		 PI / 6
+	const float rad[3] = {
+		PI / 5,
+		 PI / 7,
+		 PI / 9
 	};
-	const float dist[2] = {
-		140, //close
-		220  //far
+	const float dist[3] = {
+		160, //close
+		220,  //far
+		280
 	};
 
 	std::vector<std::pair<float, float>> ptList;
 
-	for (int i = 0; i < 2; ++i)
+	for (int i = 0; i < 3; ++i)
 	{
 		for (float r = 0; r <= PI2; r += rad[i])
 		{
@@ -193,9 +210,8 @@ bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos)
 	return false;
 }
 
-Unit SituationManager::GetGasNear(Position pos)
+Unit SituationManager::GetGasNear(Position pos, int range)
 {
-	const int range = 300;
 
 	for (auto unit : Broodwar->getGeysers()) {
 		if (unit->isVisible()) {
@@ -212,7 +228,18 @@ Unit SituationManager::GetGasNear(Position pos)
 	return gasUnits.size()? gasUnits[0]:nullptr;
 }
 
-bool SituationManager::IsBuildable(TilePosition pos, int w, int h)
+std::vector<Unit> SituationManager::GetMineralsNear(Position pos, int range)
+{
+	auto mineralUnits = Broodwar->getUnitsInRadius(pos,range, BWAPI::Filter::IsMineralField);
+	std::vector<Unit> ret;
+	for (auto m : mineralUnits)
+	{
+		ret.push_back(m);
+	}
+	return ret;
+}
+
+bool SituationManager::IsBuildable(TilePosition pos, int w, int h, bool isNeedCreep)
 {	
 	int maxW = Broodwar->mapWidth();
 	int maxH = Broodwar->mapHeight();
@@ -221,19 +248,19 @@ bool SituationManager::IsBuildable(TilePosition pos, int w, int h)
 	for (int x = 0; x < w; ++x) {
 		for (int y = 0; y < h; ++y) {
 
-			int mx = pos.x + x;
-			int my = pos.y + y;
+			TilePosition mtPos = TilePosition(pos.x + x, pos.y + y);
 
-			if (mx >= maxW || my >= maxH)
+			if (mtPos.x >= maxW || mtPos.y >= maxH)
 				return false;
 
-			TilePosition mtPos = TilePosition(mx, my);
-			if (!Broodwar->hasCreep(mtPos))
+			if (isNeedCreep && !Broodwar->hasCreep(mtPos))
 				return false;
-			WalkPosition wPos = WalkPosition();
+			WalkPosition wPos = WalkPosition(mtPos);
 			wPos.x += 1;
 			wPos.y += 1;
 
+			if (0 > wPos.x || wPos.x >= (maxW * 4) || 0 > wPos.y || wPos.y >= (maxH * 4))
+				return false;
 
 			int curTerr = SG_MAP.GetTerrain(wPos);
 			if (((curTerr & MAP_BUILDABLE) != MAP_BUILDABLE) ||
@@ -381,20 +408,29 @@ int SituationManager::GetValidSupply()
 	return Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed();
 }
 
-void SituationManager::AddDevUnit(UnitType type)
+void SituationManager::AddDevUnit(UnitType unit, int count)
 {
-	m_devUnits.insert(type);
+	if (unit == UnitTypes::Zerg_Spawning_Pool)
+		int a = 234;
+
+	m_devUnits[unit]+=count;
+}
+void SituationManager::RemoveDevUnit(UnitType u, int count)
+{
+	m_devUnits[u]-=count;
+
+	if(m_devUnits[u]<0)
+		m_devUnits[u] = 0;
 }
 
-void SituationManager::RemoveDevUnit(UnitType type)
-{
-	m_devUnits.erase(type);
-}
 
 
-bool SituationManager::IsDeveloping(UnitType type)
+int SituationManager::IsDeveloping(UnitType type)
 {
-	return m_devUnits.find(type) != m_devUnits.end();
+	if (m_devUnits[type] > 0)
+		return m_devUnits[type];
+
+	return 0;
 }
 
 void SituationManager::GetUnitPrice(UnitType type, int& mineral, int& gas)
@@ -535,6 +571,7 @@ int SituationManager::GetPL()
 {
 	return m_plCurTotal;
 }
+
 
 void SituationManager::ResetPL()
 {

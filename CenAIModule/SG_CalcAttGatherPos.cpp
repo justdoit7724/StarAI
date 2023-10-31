@@ -42,8 +42,8 @@ void SG_CalcAttGatherPos::Update(const Controller* con)
 				break;
 		}
 
-
-		m_passData->poses.push(step);
+		if(m_passData->nextSmallGoalPtr[this])
+			m_passData->poses[m_passData->nextSmallGoalPtr[this]].push_back(step);
 		m_stage++;
 	}
 		break;

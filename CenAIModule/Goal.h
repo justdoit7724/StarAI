@@ -2,6 +2,7 @@
 
 class Controller;
 class BigGoal;
+class SmallGoal;
 
 #define GOAL_RESULT_FAILED -1
 #define GOAL_RESULT_SUCCESS 1
@@ -26,25 +27,32 @@ public:
 	
 	int Finished();
 
+	virtual void Init() { m_isInitialized = true; }
+
+
 	const Color m_debugColor;
 
 protected:
 	int m_result;
+	bool m_isInitialized;
 };
 
 
 struct GoalIO
 {
-	std::queue<Unit> units;
-	std::queue<UnitType> unitTypes;
-	std::queue<UpgradeType> upgType;
-	std::queue<Position> poses;
-	std::queue<int> iValues;
-	std::queue<float> fValues;
-	std::queue<bool> bValues;
+	std::unordered_map<const SmallGoal*, std::vector<Unit>> units;
+	std::unordered_map<const SmallGoal* ,std::vector<UnitType>> unitTypes;
+	std::unordered_map<const SmallGoal* ,std::vector<UpgradeType>> upgType;
+	std::unordered_map<const SmallGoal* ,std::vector<Position>> poses;
+	std::unordered_map<const SmallGoal* ,std::vector<int>> iValues;
+	std::unordered_map<const SmallGoal* ,std::vector<float>> fValues;
+	std::unordered_map<const SmallGoal* ,std::vector<bool>> bValues;
+	std::unordered_map<const SmallGoal*, const SmallGoal*> nextSmallGoalPtr;
+	std::unordered_map<const SmallGoal*, std::vector<std::pair<int, int>>> devs;
 	int count;
 
 	Position dbBigGoalPos;
 	BigGoal* bigGoalPtr;
+	SmallGoal* nextGoalPtr;
 	Position attPos;
 };

@@ -13,29 +13,41 @@ void SG_Recruit::Update(const Controller* con)
 	if (Finished())
 		return;
 
-	auto zerglings = SG_SITU.UnitsInRange(true, TilePosition(0, 0), UnitTypes::Zerg_Zergling, 10000);
-	std::vector<Unit> validZerglings;
-	for (auto z : zerglings)
-	{
-		if (SG_SITU.IsUnitRegistered(z))
-			continue;
 
-		validZerglings.push_back(z);
-	}
-	
-	if (m_num <= validZerglings.size())
+	m_result = GOAL_RESULT_SUCCESS;
+
+	std::vector<std::vector<Unit>> validUnits(m_units.size());
+	for (int i = 0; i < m_units.size(); ++i)
 	{
-		for (auto z : validZerglings)
+		auto curUnits = SG_SITU.UnitsInRange(true, TilePosition(0, 0), m_units[i], 10000);
+		for (auto u : curUnits)
 		{
-			SG_SITU.RegisterUnit(m_passData->bigGoalPtr, z);
+			if (SG_SITU.IsUnitRegistered(u))
+				continue;
+
+			validUnits[i].push_back(u);
+
+			if (m_unitCounts[i] == validUnits[i].size())
+				break;
 		}
 
-		m_result = GOAL_RESULT_SUCCESS;
+		if (m_unitCounts[i] > validUnits[i].size())
+		{
+			SG_LOGMGR.Record("GOAL_EXCEPT", "not enough zerglings");
+			m_result = GOAL_RESULT_FAILED;
+			break;
+			
+		}
 	}
-	else
+
+	if (m_result == GOAL_RESULT_SUCCESS)
 	{
-		SG_LOGMGR.Record("GOAL_EXCEPT", "not enough zerglings");
-		m_result = GOAL_RESULT_FAILED;
+
+		for (auto units : validUnits)
+			for (auto u : units)
+			{
+				SG_SITU.RegisterUnit(m_passData->bigGoalPtr, u);
+			}
 	}
 }
 
@@ -53,14 +65,18 @@ void SG_Recruit::Init()
 		return;
 	m_isInitialized = true;
 
-	if (m_passData->iValues.empty() || m_passData->iValues.front() ==0)
+	if (m_passData->iValues[this].empty() || m_passData->unitTypes[this].empty())
 	{
 		SG_LOGMGR.Record("GOAL_EXCEPT", "no unit number assigned");
 		m_result = GOAL_RESULT_FAILED;
 		return;
 	}
 
-	m_num = m_passData->iValues.front(); m_passData->iValues.pop();
+	for (int i = 0; i < m_passData->iValues[this].size(); ++i)
+	{
+		m_units.push_back(m_passData->unitTypes[this][i]);
+		m_unitCounts.push_back(m_passData->iValues[this][i]);
+	}
 
 	
 }

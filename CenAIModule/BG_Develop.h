@@ -22,6 +22,8 @@ public:
 
     std::string ID()const override;
 
+
+
     const Unit m_resourceDepot;
     const float m_e;
 
@@ -31,5 +33,6 @@ private:
     bool m_finish;
 
     BG_DevelopeKind m_devKind;
+
 };
 

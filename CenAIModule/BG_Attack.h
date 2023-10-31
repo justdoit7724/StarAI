@@ -4,7 +4,7 @@ class BG_Attack :
     public BigGoal
 {
 public:
-    BG_Attack(Position pos);
+    BG_Attack(Position pos, std::vector<UnitType> units, std::vector<int> unitCounts);
     ~BG_Attack()override;
 
     void Update(const Controller* con) override;

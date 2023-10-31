@@ -132,6 +132,9 @@
     <ClInclude Include="TH_HydraBase.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="BG_Expansion.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -234,6 +237,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TH_HydraBase.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BG_Expansion.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

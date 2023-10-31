@@ -7,7 +7,7 @@
 BG_TrainTroop::BG_TrainTroop(Unit rd, std::vector<Unit> units, std::vector<float> weighs)
 	:BigGoal(Colors::Red), m_rd(rd)
 {
-	if (!m_rd || !m_rd->exists())
+	/*if (!m_rd || !m_rd->exists())
 		return;
 
 	m_passData.dbBigGoalPos = m_rd->getPosition();
@@ -29,7 +29,7 @@ BG_TrainTroop::BG_TrainTroop(Unit rd, std::vector<Unit> units, std::vector<float
 		m_passData.units.push(m_rd);
 
 		m_subGoals.push_back(new SG_Train(&m_passData));
-	}
+	}*/
 }
 
 void BG_TrainTroop::Debug()

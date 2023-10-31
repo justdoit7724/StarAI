@@ -16,6 +16,8 @@ public:
 
     virtual void Update(const Controller* con) override;
 
+    void Init() override;
+
     virtual std::string ID()const = 0;
 
 protected:

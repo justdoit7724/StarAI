@@ -1,4 +1,1 @@
-﻿  BG_Develop.cpp
-C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\BG_Develop.cpp(157,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\justd\OneDrive\Desktop\Starcraft\libraries\BWAPI\CenAIModule\BG_Develop.cpp(173,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-  CenAIModule.vcxproj -> C:\Users\justd\OneDrive\Desktop\Starcraft\Starcraft\bwapi-data\AI\CenAIModule_d.dll
+﻿  CenAIModule.vcxproj -> C:\Users\justd\OneDrive\Desktop\Starcraft\Starcraft\bwapi-data\AI\CenAIModule_d.dll

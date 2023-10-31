@@ -25,6 +25,7 @@ void Theme::Update(const Controller* con)
 	{
 		for (int i = 0; i < it->second.size();)
 		{
+			it->second[i]->Init();
 			it->second[i]->Update(con);
 #ifdef _DEBUG
 			it->second[i]->Debug();

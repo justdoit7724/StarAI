@@ -3,48 +3,8 @@
 #include <vector>
 #include <functional>
 #include <set>
+#include "StopWatch.h"
 
-/*
-* //usage
-auto rd = SG_SITU.GetUnit(true, UnitTypes::Zerg_Hatchery);
-auto rd2 = SG_SITU.GetUnit(false, UnitTypes::Protoss_Nexus);
-
-
-
-static bool done = false;
-static AStar::CoordinateList path;
-if (rd && rd2 && !done)
-{
-    AStar::Generator generator;
-    // Set 2d map size.
-    int tWidth = SG_MAP.GetWidth() / 4;
-    int tHeight = SG_MAP.GetHeight() / 4;
-    generator.setWorldSize({ tWidth, tHeight });
-    // You can use a few heuristics : manhattan, euclidean or octagonal.
-    generator.setHeuristic(AStar::Heuristic::euclidean);
-    generator.setDiagonalMovement(false);
-
-    for (int y = 0; y < tHeight; ++y)
-    {
-        for (int x = 0; x < tWidth; ++x)
-        {
-            auto terr = SG_MAP.GetTerrain(WalkPosition(x * 4, y * 4));
-            if(terr & MAP_MOVABLE)
-        }
-    }
-
-    SG_MAP.GetTerrain()
-    generator.addCollision(Vec2i coordinates_);
-
-    // This method returns vector of coordinates from target to source.
-    auto path = generator.findPath({ rd->getTilePosition().x * 4, rd->getTilePosition().y * 4 }, { rd2->getTilePosition().x * 4, rd2->getTilePosition().y * 4 });
-
-    for (auto& coordinate : path) {
-
-        SG_DEBUGMGR.DrawBox(TilePosition(coordinate.x, coordinate.y), 32, 32, Colors::Orange);
-    }
-}
-*/
 
 namespace AStar
 {
@@ -95,6 +55,11 @@ namespace AStar
         CoordinateList direction, walls;
         Vec2i worldSize;
         uint directions;
+        Node* current;
+
+        //findpath
+        NodeSet openSet, closedSet;
+        StopWatch timer;
     };
 
     class Heuristic

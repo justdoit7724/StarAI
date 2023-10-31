@@ -19,8 +19,9 @@ public:
 	int OpenMinerals(Unit resourceDepot);
 	
 	bool GetOpenPositionNear(Position pos, Position& outPos);
-	Unit GetGasNear(Position pos);
-	bool IsBuildable(TilePosition pos, int w, int h);
+	Unit GetGasNear(Position pos, int range=300);
+	std::vector<Unit> GetMineralsNear(Position pos, int range = 300);
+	bool IsBuildable(TilePosition pos, int w, int h, bool isNeedCreep=true);
 
 	void RegisterUnit(const BigGoal* goal, Unit unit);
 	void UnregisterUnit(Unit unit);
@@ -37,9 +38,9 @@ public:
 	int CurGas();
 	int GetValidSupply();
 
-	void AddDevUnit(UnitType type);
-	void RemoveDevUnit(UnitType type);
-	bool IsDeveloping(UnitType type);
+	void AddDevUnit(UnitType u, int count=1);
+	void RemoveDevUnit(UnitType u, int count=1);
+	int IsDeveloping(UnitType type);
 
 	void GetUnitPrice(UnitType type, int& mineral, int& gas);
 
@@ -53,7 +54,7 @@ public:
 
 private:
 	std::unordered_map<const BigGoal*, std::unordered_set<Unit>> m_regUnits;
-	std::unordered_set<int> m_devUnits;
+	std::unordered_map<int, int> m_devUnits;
 
 	StopWatch* m_secTimer;
 	std::vector<int> m_minerals;

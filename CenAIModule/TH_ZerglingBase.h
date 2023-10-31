@@ -18,5 +18,9 @@ public:
 
 private:
     StopWatch* m_timer;
+    StopWatch* m_timer2;
+
+    int m_zerglingCount;
+    int m_plCompensate;
 };
 

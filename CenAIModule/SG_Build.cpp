@@ -10,15 +10,19 @@ SG_Build::SG_Build(GoalIO* passData)
     :SmallGoal(passData,Colors::Blue),m_type(UnitTypes::None), m_worker(nullptr), m_build(nullptr)
 {
     m_timer = new StopWatch();
+
 }
 
 SG_Build::~SG_Build()
 {
-    SG_SITU.RemoveDevUnit(m_type);
     SG_SITU.UnregisterUnit(m_worker);
 
-    if(m_build)
-        m_passData->units.push(m_build);
+    SG_SITU.RemoveDevUnit(m_passData->devs[this][0].first);
+
+    if (m_build && m_passData->nextSmallGoalPtr[this])
+    {
+        m_passData->units[m_passData->nextSmallGoalPtr[this]].push_back(m_build);
+    }
 
     delete m_timer;
 
@@ -122,7 +126,7 @@ void SG_Build::Update(const Controller* con)
 
         }
 
-        if (m_timer->elapsed() > 6)
+        if (m_timer->elapsed() > 5)
         {
             SG_LOGMGR.Record("GOAL_EXCEPT", "not buildable - build");
             m_result = GOAL_RESULT_FAILED;
@@ -142,6 +146,9 @@ void SG_Build::Update(const Controller* con)
 
         for (auto b : buildings)
         {
+            if (b->getType() != m_type)
+                continue;
+
             if (b->isMorphing())
             {
                 m_build = b;
@@ -186,7 +193,11 @@ void SG_Build::Debug()
     int w=m_type.width();
     int h = m_type.height();
 
-    SG_DEBUGMGR.DrawBox(m_pos, w- m_type.width()/2, h- m_type.height() / 2, m_debugColor);
+    auto drawPos = m_pos;
+    drawPos.x -= m_type.width() / 2;
+    drawPos.y -= m_type.height() / 2;
+
+    SG_DEBUGMGR.DrawBox(drawPos, w, h, m_debugColor);
 
 }
 
@@ -202,9 +213,11 @@ void SG_Build::Init()
         m_result = GOAL_RESULT_FAILED;
         return;
     }
-    m_type = m_passData->unitTypes.front(); m_passData->unitTypes.pop();
-    m_pos = m_passData->poses.front(); m_passData->poses.pop();
+    m_type = m_passData->unitTypes[this][0];
+    m_pos = m_passData->poses[this][0];
 
-    SG_SITU.AddDevUnit(m_type);
+    
+
+    SG_SITU.AddDevUnit(m_passData->devs[this][0].first);
 }
 

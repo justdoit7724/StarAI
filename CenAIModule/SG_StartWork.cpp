@@ -80,13 +80,13 @@ void SG_StartWork::Init()
         return;
     m_isInitialized = true;
 
-    if (m_passData->units.empty() || m_passData->bValues.empty())
+    if (m_passData->units[this].empty() || m_passData->bValues[this].empty())
     {
         SG_LOGMGR.Record("GOAL_EXCEPT", "no valid init in StartWork");
         m_result = GOAL_RESULT_FAILED;
         return;
     }
-    m_rd = m_passData->units.front(); m_passData->units.pop();
-    m_isMineral = m_passData->bValues.front(); m_passData->bValues.pop();
+    m_rd = m_passData->units[this][0];
+    m_isMineral = m_passData->bValues[this][0];
 
 }

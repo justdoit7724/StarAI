@@ -6,15 +6,21 @@
 #include "SG_CalcAttGatherPos.h"
 #include "SituationManager.h"
 
-BG_Attack::BG_Attack(Position pos)
+BG_Attack::BG_Attack(Position pos, std::vector<UnitType> units, std::vector<int> unitCounts)
 	:m_finish(false), m_attPos(pos),BigGoal(Color(255,0,0))
 {
+	auto recruitGoal = new SG_Recruit(&m_passData);
+
 	m_passData.bigGoalPtr = this;
 	m_passData.dbBigGoalPos = m_attPos;
 	m_passData.attPos = pos;
-	m_passData.iValues.push(6);
+	for (int i = 0; i < units.size(); ++i)
+	{
+		m_passData.iValues[recruitGoal].push_back(unitCounts[i]);
+		m_passData.unitTypes[recruitGoal].push_back(units[i]);
+	}
 
-	m_subGoals.push_back(new SG_Recruit(&m_passData));
+	m_subGoals.push_back(recruitGoal);
 	m_subGoals.push_back(new SG_CalcAttGatherPos(&m_passData));
 	m_subGoals.push_back(new SG_Gather(&m_passData));
 	m_subGoals.push_back(new SG_Attack(&m_passData));

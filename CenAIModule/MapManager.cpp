@@ -2,6 +2,7 @@
 #include "MapManager.h"
 #include "LogManager.h"
 #include "SituationManager.h"
+#include "DebugManager.h"
 
 
 float GetAttWeight(Unit unit, int x, int y)
@@ -17,6 +18,7 @@ float GetAttWeight(Unit unit, int x, int y)
 
 
 MapManager::MapManager()
+    :m_isFoundExpansion(false)
 {
     auto mapW = Broodwar->mapWidth();
     auto mapH = Broodwar->mapHeight();
@@ -87,6 +89,13 @@ MapManager::MapManager()
 
     m_wPts = std::make_unique< SwapChain<weighPts>>(std::vector<std::pair<int, int>>(), std::vector<std::pair<int, int>>());
     m_state = std::make_unique< SwapChain<basicMap>>(state1, state2);
+
+    m_generator = new AStar::Generator();
+}
+
+MapManager::~MapManager()
+{
+    delete m_generator;
 }
 
 int MapManager::GetWidth()
@@ -418,7 +427,219 @@ void MapManager::Update()
     
 
     //location update
-    
+    static long long mapFindStep = 0;
+    switch (mapFindStep++)
+    {
+    case 0:
+    {
+        auto rdList = SG_SITU.UnitsInRange(true, TilePosition(0, 0), UnitTypes::Zerg_Hatchery);
+        if (rdList.empty())
+        {
+            mapFindStep--;
+            break;
+        }
+        m_myRD = rdList[0];
+        std::vector<Unit> emList;
+        switch (Broodwar->enemy()->getRace())
+        {
+        case Races::Protoss:
+            emList = SG_SITU.UnitsInRange(false, TilePosition(0, 0), UnitTypes::Protoss_Nexus);
+            break;
+        case Races::Zerg:
+            emList = SG_SITU.UnitsInRange(false, TilePosition(0, 0), UnitTypes::Zerg_Hatchery);
+            break;
+        case Races::Terran:
+            emList = SG_SITU.UnitsInRange(false, TilePosition(0, 0), UnitTypes::Terran_Command_Center);
+            break;
+        }
+        if (emList.empty())
+        {
+            mapFindStep--;
+            break;
+        }
+        m_emRD = emList[0];
+    }
+    break;
+    case 1:
+    {
+        // Set 2d map size.
+        int tWidth = SG_MAP.GetWeightWidth();
+        int tHeight = SG_MAP.GetWeightHeight();
+        m_generator->setWorldSize({ tWidth, tHeight });
+        // You can use a few heuristics : manhattan, euclidean or octagonal.
+        m_generator->setHeuristic(AStar::Heuristic::euclidean);
+        m_generator->setDiagonalMovement(false);
+
+        for (int y = 0; y < tHeight; ++y)
+        {
+            for (int x = 0; x < tWidth; ++x)
+            {
+                auto terr = SG_MAP.GetTerrain(WalkPosition(x * 4 + 1, y * 4 + 1));
+                if ((terr & MAP_MOVABLE) != MAP_MOVABLE)
+                    m_generator->addCollision({ x,y });
+            }
+        }
+    }
+    break;
+    case 2:
+    {
+        m_path = m_generator->findPath({ m_myRD->getTilePosition().x+1, m_myRD->getTilePosition().y+1 }, { m_emRD->getTilePosition().x+1, m_emRD->getTilePosition().y+1});
+
+        if (m_path.empty())
+        {
+            mapFindStep--;
+        }
+
+    }
+    break;
+    case 3:
+    {
+        auto selPos = m_path[m_path.size() - 25];
+        Position pos = Position(selPos.x * 32 + 32, selPos.y * 32 + 32);
+        auto coreMins = SG_SITU.GetMineralsNear(m_myRD->getPosition(), 300);
+        auto mins = SG_SITU.GetMineralsNear(pos, 500);
+
+        SG_DEBUGMGR.DrawCircle(pos, 32, Colors::Green);
+        
+
+        Unit pivotMineral = nullptr;
+        for (int i = 0; i < mins.size();)
+        {
+            bool isExist = false;
+            for (auto cm : coreMins)
+            {
+                if (cm == mins[i])
+                {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (isExist)
+            {
+                mins.erase(mins.begin() + i);
+            }
+            else
+            {
+                pivotMineral = mins[i];
+                break;
+            }
+        }
+        if (!pivotMineral)
+        {
+
+            mapFindStep--;
+            break;
+
+        }
+
+        m_expGas = SG_SITU.GetGasNear(pivotMineral->getPosition(), 400);
+        if (!m_expGas)
+        {
+            mapFindStep--;
+            break;
+        }
+
+        m_expMinerals = SG_SITU.GetMineralsNear(pivotMineral->getPosition(), 500);
+
+
+
+        for (auto m : m_expMinerals)
+        {
+            SG_DEBUGMGR.DrawBox(m->getPosition(), 64, 32, Colors::Cyan);
+        }
+        SG_DEBUGMGR.DrawBox(m_expGas->getPosition(), 96, 64, Colors::Green);
+
+        
+    }
+    break;
+    case 4:
+    {
+        Position center = Position(0, 0);
+
+        for (auto m : m_expMinerals)
+        {
+            center += m->getPosition();
+        }
+        center += m_expGas->getPosition();
+        center /= (m_expMinerals.size() + 1);
+
+        SG_DEBUGMGR.DrawCircle(center, 16, Colors::Blue);
+
+        for (int y = -7; y <= 7; ++y)
+        {
+            for (int x = -7; x <= 7; ++x)
+            {
+                TilePosition tp = TilePosition(center.x/32, center.y/32);
+                tp.x += x;
+                tp.y += y;
+
+                //3by3 check
+                if (SG_SITU.IsBuildable(tp, 4, 3,false))
+                {
+                    Position dp = Position(tp);
+                    dp.x += 2 * 32;
+                    dp.y += 1.5 * 32;
+
+                    m_expPts.push_back(dp);
+                }
+
+            }
+        }
+    }
+    break;
+    case 5:
+    {
+        for (int i = 0; i < m_expPts.size();)
+        {
+            bool isDelete = false;
+
+            for (const auto& m : m_expMinerals)
+            {
+                if (m_expPts[i].getDistance(m->getPosition()) < (32*5.5))
+                {
+                    isDelete = true;
+                    break;
+                }
+            }
+            if (!isDelete && m_expPts[i].getDistance(m_expGas->getPosition()) < (32*6.5))
+            {
+                isDelete = true;
+            }
+            if (isDelete)
+                m_expPts.erase(m_expPts.begin() + i);
+            else
+                i++;
+        }
+
+    }
+    break; 
+    case 6:
+    {
+        double minScore = DBL_MAX;
+        int selID = -1;
+        for (int i = 0; i < m_expPts.size(); ++i)
+        {
+            double curScore = 0;
+            for (const auto& m : m_expMinerals)
+            {
+                curScore += m_expPts[i].getDistance(m->getPosition());
+            }
+            curScore += m_expPts[i].getDistance(m_expGas->getPosition())*2;
+            
+            if (curScore < minScore)
+            {
+                minScore = curScore;
+                selID = i;
+            }
+        }
+
+        m_expPt = m_expPts[selID];
+    }
+    break;
+
+    }
+   
+
 
 }
 
@@ -585,5 +806,10 @@ void MapManager::DisplayPts()
         Broodwar->drawCircle(BWAPI::CoordinateType::Screen, rpPos.x, rpPos.y, distThreshold, Color(r, g, b));
 
     }
+}
+
+Position MapManager::GetExpPt()
+{
+    return m_expPt;
 }
 

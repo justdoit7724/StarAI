@@ -14,6 +14,11 @@ SG_Train::SG_Train(GoalIO* passData)
 
 SG_Train::~SG_Train()
 {
+    for (auto devUnit : m_passData->devs[this])
+    {
+        SG_SITU.RemoveDevUnit(devUnit.first, devUnit.second);
+    }
+
     delete m_timer;
 }
 
@@ -27,11 +32,13 @@ void SG_Train::Update(const Controller* con)
     {
     case 1:
     {
+        int dec = m_type == UnitTypes::Zerg_Zergling ? 2 : 1;
+
         if (m_count )
         {
             con->Train(m_trainBuilding, m_type);
 
-            m_count--;
+            m_count-= dec;
             m_timer->reset();
             m_stage++;
 
@@ -119,13 +126,19 @@ void SG_Train::Init()
         return;
     m_isInitialized = true;
 
-    if (m_passData->units.empty() || m_passData->unitTypes.empty() || m_passData->iValues.empty())
+    if (m_passData->units[this].empty() || m_passData->unitTypes[this].empty() || m_passData->iValues[this].empty())
     {
         SG_LOGMGR.Record("GOAL_EXCEPT", "not valid input - train");
         m_result = GOAL_RESULT_FAILED;
         return;
     }
-    m_trainBuilding = m_passData->units.front(); m_passData->units.pop();
-    m_type = m_passData->unitTypes.front(); m_passData->unitTypes.pop();
-    m_count = m_passData->iValues.front(); m_passData->iValues.pop();
+    m_trainBuilding = m_passData->units[this][0];
+    m_type = m_passData->unitTypes[this][0];
+    m_count = m_passData->iValues[this][0];
+
+    for (auto devUnit : m_passData->devs[this])
+    {
+        SG_SITU.AddDevUnit(devUnit.first, devUnit.second);
+    }
+
 }
