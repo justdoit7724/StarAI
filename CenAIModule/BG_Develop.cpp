@@ -151,54 +151,53 @@ BG_Develop::BG_Develop(Unit resourceDepot, std::vector<UnitType> units, std::vec
 			troopMinPrice /= 2;
 	}
 
-	TechNode req;
-	bool isInDev;
-	bool isTechValid = SG_TECH.IsValid(UnitTypes::Zerg_Zergling, isInDev, &req);
-	if (isTechValid)
+	bool isAllTechValid = true;
+	for (int i = 0; i < units.size(); ++i)
 	{
-		auto trainGoal = new SG_Train(&m_passData);
-		
-		for (int i = 0; i < units.size(); ++i)
+		TechNode req;
+		if (SG_TECH.IsValid(units[i], &req))
 		{
+			auto trainGoal = new SG_Train(&m_passData);
+
 			m_passData.unitTypes[trainGoal].push_back(units[i]);
 			m_passData.iValues[trainGoal].push_back(uCounts[i]);
-
 			m_passData.devs[trainGoal].push_back({ units[i],uCounts[i] });
+			m_passData.units[trainGoal].push_back(m_resourceDepot);
+
+			m_subGoals.push_back(trainGoal);
+
 		}
-		m_passData.count = units.size();
-		m_passData.units[trainGoal].push_back(m_resourceDepot);
-
-		m_subGoals.push_back(trainGoal);
-
-	}
-	else
-	{
-		int reqMinPrice;
-		int reqGasPrice;
-		SG_SITU.GetUnitPrice(req.unitType, reqMinPrice, reqGasPrice);
-
-		Position pos;
-		if (SG_SITU.CurMineral() >= reqMinPrice && SG_SITU.CurGas() >= reqGasPrice && SG_SITU.GetOpenPositionNear(m_resourceDepot->getPosition(), pos))
+		else
 		{
-			if (!SG_SITU.IsDeveloping(req.unitType))
+			int reqMinPrice;
+			int reqGasPrice;
+			SG_SITU.GetUnitPrice(req.unitType, reqMinPrice, reqGasPrice);
+
+			Position pos;
+			if (SG_SITU.CurMineral() >= reqMinPrice && SG_SITU.CurGas() >= reqGasPrice && 
+				SG_SITU.GetOpenPositionNear(m_resourceDepot->getPosition(), pos, req.unitType.tileWidth(), req.unitType.tileHeight()))
 			{
+				if (!SG_SITU.IsDeveloping(req.unitType))
+				{
+					auto name = req.unitType.getName();
 
-				auto buildGoal = new SG_Build(&m_passData);
+					auto buildGoal = new SG_Build(&m_passData);
 
-				m_passData.unitTypes[buildGoal].push_back(req.unitType);
-				m_passData.poses[buildGoal].push_back(pos);
-				m_passData.devs[buildGoal].push_back({ req.unitType,1 });
+					m_passData.unitTypes[buildGoal].push_back(req.unitType);
+					m_passData.poses[buildGoal].push_back(pos);
+					m_passData.devs[buildGoal].push_back({ req.unitType,1 });
 
-				m_subGoals.push_back(buildGoal);
+					m_subGoals.push_back(buildGoal);
 
-				m_devKind = BG_DevelopeKind::Build_Tech;
+					m_devKind = BG_DevelopeKind::Build_Tech;
+				}
 			}
+
+			isAllTechValid = false;
 		}
-
-
 	}
 
-	if (isTechValid)
+	if (isAllTechValid)
 	{
 		int sunkenCount = 0;
 		sunkenCount = SG_SITU.UnitsInRange(true, m_resourceDepot->getTilePosition(), UnitTypes::Zerg_Sunken_Colony, 250).size();
@@ -221,7 +220,7 @@ BG_Develop::BG_Develop(Unit resourceDepot, std::vector<UnitType> units, std::vec
 			if (!SG_SITU.IsDeveloping(UnitTypes::Zerg_Sunken_Colony))
 			{
 				Position pos;
-				if (SG_SITU.GetOpenPositionNear(m_resourceDepot->getPosition(), pos))
+				if (SG_SITU.GetOpenPositionNear(m_resourceDepot->getPosition(), pos,2,2))
 				{
 					auto buildGoal = new SG_Build(&m_passData);
 					auto morphGoal = new SG_Morphing(&m_passData);

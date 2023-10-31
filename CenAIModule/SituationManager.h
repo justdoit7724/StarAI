@@ -13,12 +13,15 @@ public:
 	SituationManager();
 	~SituationManager();
 
+	void Init(Unit base);
+	Unit GetBase();
+
 	void Update();
 
 	bool IsExist(bool isAlly, BWAPI::UnitType type);
 	int OpenMinerals(Unit resourceDepot);
 	
-	bool GetOpenPositionNear(Position pos, Position& outPos);
+	bool GetOpenPositionNear(Position pos, Position& outPos, int w, int h, double dist=-1);
 	Unit GetGasNear(Position pos, int range=300);
 	std::vector<Unit> GetMineralsNear(Position pos, int range = 300);
 	bool IsBuildable(TilePosition pos, int w, int h, bool isNeedCreep=true);
@@ -53,6 +56,8 @@ public:
 	void ResetPL();
 
 private:
+	Unit m_base;
+
 	std::unordered_map<const BigGoal*, std::unordered_set<Unit>> m_regUnits;
 	std::unordered_map<int, int> m_devUnits;
 

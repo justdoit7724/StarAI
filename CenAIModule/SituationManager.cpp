@@ -6,7 +6,7 @@
 
 
 SituationManager::SituationManager()
-	:m_plCurTotal(0)
+	:m_plCurTotal(0), m_base(nullptr)
 {
 	m_mInterval = 20;
 	m_secTimer = new StopWatch();
@@ -15,6 +15,16 @@ SituationManager::SituationManager()
 SituationManager::~SituationManager()
 {
 	delete m_secTimer;
+}
+
+void SituationManager::Init(Unit base)
+{
+	m_base = base;
+}
+
+Unit SituationManager::GetBase()
+{
+	return m_base;
 }
 
 void SituationManager::Update()
@@ -137,9 +147,9 @@ int SituationManager::OpenMinerals(Unit resourceDepot)
 	return val;
 }
 
-bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos)
+bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos, int w, int h, double dist)
 {
-	const int LeastDistFromResource = 96;
+	const int LeastDistFromResource = 80;
 
 	outPos.x = -1;
 	outPos.y = -1;
@@ -148,24 +158,26 @@ bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos)
 
 	const float PI = 3.14;
 	const float PI2 = 2 * PI;
-	const float rad[3] = {
-		PI / 5,
-		 PI / 7,
-		 PI / 9
-	};
-	const float dist[3] = {
-		160, //close
-		220,  //far
-		280
+	const float rad = PI / 9;
+	std::vector<float> dists;
+	if (dist > 0)
+	{
+		dists.push_back(dist);
+	}
+	else
+	{
+		dists.push_back(160);
+		dists.push_back(220);
+		dists.push_back(280);
 	};
 
 	std::vector<std::pair<float, float>> ptList;
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < dists.size(); ++i)
 	{
-		for (float r = 0; r <= PI2; r += rad[i])
+		for (float r = 0; r <= PI2; r += rad)
 		{
-			ptList.push_back({dist[i], r});
+			ptList.push_back({dists[i], r});
 		}
 	}
 	for (int i = 0; i < ptList.size() / 2; ++i)
@@ -178,7 +190,7 @@ bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos)
 		Rotate(pos.x, pos.y, pos.x + p.first, pos.y, p.second, curX, curY);
 		Position curPos(curX-32, curY-32);
 
-		if (!IsBuildable(TilePosition(curPos), 3, 3))
+		if (!IsBuildable(TilePosition(curPos), w, h))
 			continue;
 
 		//resource skip

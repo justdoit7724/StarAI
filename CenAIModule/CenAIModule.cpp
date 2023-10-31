@@ -32,6 +32,10 @@ void CenAIModule::onStart()
 
     srand(time(nullptr));
 
+
+    auto rd = SG_SITU.UnitsInRange(true, TilePosition(32, 32), UnitTypes::Zerg_Hatchery);
+    SG_SITU.Init(rd[0]);
+
 }
 
 void CenAIModule::onEnd(bool isWinner)

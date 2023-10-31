@@ -32,6 +32,8 @@ public:
 	void DisplayPts();
 
 	Position GetExpPt();
+	bool IsExpOccupied();
+	bool GetAddExpPt(Position& pos);
 
 private:
 

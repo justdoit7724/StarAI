@@ -8,6 +8,7 @@
 Brain::Brain()
 {
 	m_mainTheme = new TH_ZerglingBase();
+	//m_mainTheme = new TH_HydraBase();
 }
 
 void Brain::Update(const Controller* con)

@@ -9,5 +9,8 @@ public:
     void Debug() override;
 
     virtual std::string ID() const override;
+
+private:
+    Position m_pos;
 };
 

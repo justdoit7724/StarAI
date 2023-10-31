@@ -17,45 +17,60 @@ TechTreeZerg::TechTreeZerg()
     AddTree(Zerg_Zergling, Zerg_Spawning_Pool);
     AddTree(Zerg_Spore_Colony, Zerg_Evolution_Chamber);
     AddTree(Zerg_Sunken_Colony, Zerg_Spawning_Pool);
+    AddTree(Zerg_Hydralisk_Den, Zerg_Spawning_Pool);
+    AddTree(Zerg_Hydralisk, Zerg_Hydralisk_Den);
 
 
 }
 
-bool TechTreeZerg::IsValid(TechNode tech, bool& isDeveloping, TechNode* req)
+bool TechTreeZerg::IsValid(TechNode tech, TechNode* req)
 {
     auto curTechTr = m_lookup[tech.Key()];
     assert(curTechTr != nullptr);
 
-    isDeveloping = false;
-
-    for (auto required : curTechTr->m_children)
+    bool isValid = true;
+    Tree<TechNode>* required=nullptr;
+    for (int i=0; i< curTechTr->m_children.size(); ++i)
     {
+        required = curTechTr->m_children[i];
+
+        auto name = required->m_data.unitType.getName();
+
         if (required->m_data.isUnit)
         {
             if (!SG_SITU.IsExist(true, required->m_data.unitType))
             {
-                if (SG_SITU.IsDeveloping(required->m_data.unitType))
-                {
-                    isDeveloping = true;
-                }
-
-                if (req)
-                    *req = required->m_data;
-
-                return false;
+                isValid = false;
+                break;
             }
         }
         else
         {
             if (!Broodwar->self()->getUpgradeLevel(required->m_data.upgType))
             {
-                if (req)
-                    *req = required->m_data;
-                return false;
+                isValid = false;
+                break;
             }
         }
 
     }
+
+
+    if(!isValid)
+    {
+        TechNode* subReq= new TechNode();
+        if (IsValid(required->m_data, subReq))
+        {
+            if (req)*req = required->m_data;
+        }
+        else
+        {
+            if (req)*req = *subReq;
+        }
+
+        return false;
+    }
+    
     return true;
 }
 

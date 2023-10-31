@@ -9,6 +9,7 @@
 #include "LogManager.h"
 #include "AStar.h"
 #include "StopWatch.h"
+#include "BG_Expansion.h"
 
 TH_ZerglingBase::TH_ZerglingBase()
 	:Theme(ID())
@@ -39,8 +40,6 @@ void TH_ZerglingBase::Update(const Controller* con)
 		}
 	}
 
-	SG_DEBUGMGR.DrawTextFix(100, 100, std::to_string(m_zerglingCount));
-
 	if (m_timer->elapsed() > 0.5)
 	{
 		m_timer->reset();
@@ -50,6 +49,8 @@ void TH_ZerglingBase::Update(const Controller* con)
 		{
 			std::vector<UnitType> units;
 			std::vector<int> unitCounts;
+			std::vector<UnitType> trainUnits;
+			std::vector<int> trainUnitCounts;
 			units.push_back(UnitTypes::Zerg_Zergling);
 			unitCounts.push_back(m_zerglingCount);
 
@@ -66,7 +67,9 @@ void TH_ZerglingBase::Update(const Controller* con)
 				if (curUnitCount < unitCounts[i])
 				{
 					isTroopReady = false;
-					break;
+
+					trainUnits.push_back(units[i]);
+					trainUnitCounts.push_back(unitCounts[i]-curUnitCount);
 				}
 			}
 
@@ -77,8 +80,26 @@ void TH_ZerglingBase::Update(const Controller* con)
 				AddGoal(new BG_Attack(Position(pts[0]), units,unitCounts));
 			}
 
-			AddGoal(new BG_Develop(rd[0], units, unitCounts, 0));
+			AddGoal(new BG_Develop(rd[0], trainUnits, trainUnitCounts, 0));
+
+
+			if (SG_SITU.GetCurMDifAvg() > 15 && SG_SITU.CurMineral() > 250 && !SG_SITU.IsDeveloping(UnitTypes::Zerg_Hatchery))
+			{
+				if (SG_MAP.IsExpOccupied())
+				{
+					Position newExpPos;
+					if (SG_MAP.GetAddExpPt(newExpPos))
+					{
+						AddGoal(new BG_Expansion(newExpPos));
+					}
+					
+				}
+				else
+					AddGoal(new BG_Expansion(SG_MAP.GetExpPt()));
+			}
 		}
+
+		
 	}
 
 	Theme::Update(con);

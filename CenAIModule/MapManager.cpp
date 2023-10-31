@@ -98,6 +98,7 @@ MapManager::~MapManager()
     delete m_generator;
 }
 
+
 int MapManager::GetWidth()
 {
     return m_Width;
@@ -811,5 +812,24 @@ void MapManager::DisplayPts()
 Position MapManager::GetExpPt()
 {
     return m_expPt;
+}
+
+bool MapManager::IsExpOccupied()
+{
+    return SG_SITU.UnitsInRange(true, TilePosition(m_expPt), UnitTypes::Zerg_Hatchery, 150).size();
+}
+
+bool MapManager::GetAddExpPt(Position& pos)
+{
+    auto center = (m_expPt + SG_SITU.GetBase()->getPosition()) / 2;
+
+    if (SG_SITU.GetOpenPositionNear(center, pos,4,3, 100))
+        return true;
+    if (SG_SITU.GetOpenPositionNear(center, pos, 4, 3, 200))
+        return true;
+    if (SG_SITU.GetOpenPositionNear(center, pos, 4, 3, 300))
+        return true;
+
+    return false;
 }
 
