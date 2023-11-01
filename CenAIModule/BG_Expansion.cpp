@@ -9,12 +9,13 @@ BG_Expansion::BG_Expansion(Position pos)
 	auto buildGasGoal = new SG_Build(&m_passData);
 	m_passData.unitTypes[buildGasGoal].push_back(UnitTypes::Zerg_Hatchery);
 	m_passData.poses[buildGasGoal].push_back(pos);
-	m_passData.devs[buildGasGoal].push_back({ UnitTypes::Zerg_Hatchery,1 });
+	m_passData.devs[buildGasGoal] ={UnitTypes::Zerg_Hatchery,1};
+	m_passData.devCenter = nullptr;
 
 	m_subGoals.push_back(buildGasGoal);
 }
 
-void BG_Expansion::Debug()
+void BG_Expansion::Debug(int depth)
 {
 	SG_DEBUGMGR.DrawTextScn(m_pos, ID());
 

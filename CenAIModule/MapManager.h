@@ -30,10 +30,19 @@ public:
 	void DisplayTerrain();
 	void DisplayTotal();
 	void DisplayPts();
+	void DisplayBuildableCheck();
+	void TurnOffDisplay();
 
 	Position GetExpPt();
 	bool IsExpOccupied();
 	bool GetAddExpPt(Position& pos);
+
+
+	bool isDisplayAtt;
+	bool isDisplayDef;
+	bool isDisplayTerrain;
+	bool isDisplayTotal;
+	bool isDisplayPts;
 
 private:
 
@@ -74,5 +83,6 @@ private:
 	Unit m_expGas;
 	std::vector<Position> m_expPts;
 	Position m_expPt;
+
 };
 

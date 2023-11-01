@@ -16,8 +16,7 @@ SG_Build::SG_Build(GoalIO* passData)
 SG_Build::~SG_Build()
 {
     SG_SITU.UnregisterUnit(m_worker);
-
-    SG_SITU.RemoveDevUnit(m_passData->devs[this][0].first);
+    SG_SITU.UnregisterUnit(m_build);
 
     if (m_build && m_passData->nextSmallGoalPtr[this])
     {
@@ -109,7 +108,7 @@ void SG_Build::Update(const Controller* con)
             con->Move(m_worker, m_pos);
         }
 
-        if (m_worker->getPosition().getDistance(m_pos) < m_type == UnitTypes::Zerg_Extractor? 20 : 4)
+        if (m_worker->getPosition().getDistance(m_pos) < m_type == UnitTypes::Zerg_Extractor? 20 : 10)
         {
             TilePosition buildPos;
             buildPos.x = (m_pos.x - m_type.width() / 2)/32;
@@ -119,10 +118,10 @@ void SG_Build::Update(const Controller* con)
             {
                 m_timer->reset();
                 m_stage++;
-            }
 
-            SG_DEBUGMGR.DrawUnit(m_worker, Colors::Purple);
-            SG_DEBUGMGR.DrawCircle(Position(buildPos), 8, Colors::Green);
+                SG_SITU.UnregisterUnit(m_worker);
+                m_worker = nullptr;
+            }
 
         }
 
@@ -137,12 +136,14 @@ void SG_Build::Update(const Controller* con)
     case 5:
     {
         if (m_timer->elapsed() > 1.5)
+        {
             m_stage++;
+        }
     }
     break;
     case 6:
     {
-        auto buildings=SG_SITU.AllUnitsinRange(true, TilePosition(m_pos), 50);
+        auto buildings = SG_SITU.AllUnitsinRange(true, TilePosition(m_pos), 50);
 
         for (auto b : buildings)
         {
@@ -152,6 +153,7 @@ void SG_Build::Update(const Controller* con)
             if (b->isMorphing())
             {
                 m_build = b;
+                SG_SITU.RegisterUnit(m_passData->bigGoalPtr, m_build);
                 m_stage++;
                 break;
             }
@@ -159,18 +161,19 @@ void SG_Build::Update(const Controller* con)
 
         if (!m_build)
         {
-            SG_LOGMGR.Record("GOAL_EXCEPT", "morphing is unavailable - build");
+            auto str = m_type.getName();
+
+            SG_LOGMGR.Record("GOAL_EXCEPT", "morphing is unavailable1 - build");
             m_result = GOAL_RESULT_FAILED;
             break;
         }
-
     }
         break;
     case 7:
 
         if (!m_build->exists())
         {
-            SG_LOGMGR.Record("GOAL_EXCEPT", "morphing is unavailable - build");
+            SG_LOGMGR.Record("GOAL_EXCEPT", "morphing is unavailable2 - build");
             m_result = GOAL_RESULT_FAILED;
             break;
         }
@@ -186,18 +189,18 @@ void SG_Build::Update(const Controller* con)
     }
 }
 
-void SG_Build::Debug()
+void SG_Build::Debug(int depth)
 {
     SG_DEBUGMGR.DrawTextScn(m_pos, "Build");
 
-    int w=m_type.width();
-    int h = m_type.height();
-
-    auto drawPos = m_pos;
-    drawPos.x -= m_type.width() / 2;
-    drawPos.y -= m_type.height() / 2;
-
-    SG_DEBUGMGR.DrawBox(drawPos, w, h, m_debugColor);
+    if (m_worker)
+    {
+        SG_DEBUGMGR.DrawUnit(m_worker, m_debugColor);
+    }
+    if (m_build)
+    {
+        SG_DEBUGMGR.DrawUnit(m_build, m_debugColor);
+    }
 
 }
 
@@ -207,17 +210,19 @@ void SG_Build::Init()
         return;
     m_isInitialized = true;
 
-    if (m_passData->unitTypes.empty() || m_passData->poses.empty())
+    if (m_passData->unitTypes[this].empty() || m_passData->poses[this].empty())
     {
         SG_LOGMGR.Record("GOAL_EXCEPT", "not valid input - build");
         m_result = GOAL_RESULT_FAILED;
         return;
     }
     m_type = m_passData->unitTypes[this][0];
+    auto str = m_type.getName();
+
     m_pos = m_passData->poses[this][0];
 
     
-
-    SG_SITU.AddDevUnit(m_passData->devs[this][0].first);
+    if(m_passData->devs.find(this) != m_passData->devs.end())
+        SG_SITU.AddDevUnit(m_passData->devCenter, m_passData->devs[this].first, m_passData->devs[this].second);
 }
 

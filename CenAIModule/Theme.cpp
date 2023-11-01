@@ -2,7 +2,7 @@
 #include "Theme.h"
 #include "BigGoal.h"
 
-Theme::Theme(std::string id):ID(id)
+Theme::Theme(std::string id):ID(id), m_isFinished(false)
 {
 }
 
@@ -54,6 +54,11 @@ void Theme::Update(const Controller* con)
 	}
 }
 
+bool Theme::IsFinished()
+{
+	return m_isFinished;
+}
+
 bool Theme::IsGoalExist(const BigGoal* goal)
 {
 	return ((m_goals.find(goal->ID()) != m_goals.end()) && m_goals[goal->ID()].size());
@@ -62,4 +67,15 @@ bool Theme::IsGoalExist(const BigGoal* goal)
 void Theme::AddGoal(BigGoal* goal)
 {
 	m_goals[goal->ID()].push_back(goal);
+}
+
+int Theme::GoalCount()
+{
+	int count = 0;
+	for (auto it : m_goals)
+	{
+		count += it.second.size();
+	}
+
+	return count;
 }

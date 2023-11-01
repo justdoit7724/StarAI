@@ -6,7 +6,7 @@ class BG_Expansion :
 public:
     BG_Expansion(Position pos);
 
-    void Debug() override;
+    void Debug(int depth = 0) override;
 
     virtual std::string ID() const override;
 

@@ -12,12 +12,17 @@ public:
 	virtual void Update(const Controller* con);
 
 	const std::string ID;
+
+	bool IsFinished();
 	
 protected:
 	std::unordered_map<std::string, std::vector<BigGoal*>> m_goals;
 
 	bool IsGoalExist(const BigGoal* goal);
 	void AddGoal(BigGoal* goal);
+	int GoalCount();
+
+	bool m_isFinished;
 
 };
 

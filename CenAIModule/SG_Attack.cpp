@@ -67,7 +67,7 @@ void SG_Attack::Update(const Controller* con)
 	}
 }
 
-void SG_Attack::Debug()
+void SG_Attack::Debug(int depth)
 {
 	SG_DEBUGMGR.DrawTextScn(m_attPos, "Attack");
 	SG_DEBUGMGR.DrawBox(m_attPos, 90, 30, m_debugColor);

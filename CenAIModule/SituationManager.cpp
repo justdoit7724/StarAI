@@ -82,16 +82,23 @@ void SituationManager::Update()
 
 	int dx = 10;
 	int dy = 130;
-	for (auto units : m_devUnits)
+	int centerID = 1;
+	for (auto& [center,units] : m_devUnits)
 	{
-		if (units.second <= 0)
-			continue;
-		UnitType ut = (UnitType)units.first;
+		for (auto& [type, count] : units)
+		{
+			if (count <= 0)
+				continue;
 
-		std::string str = ut.getName() + ":" + std::to_string(units.second);
+			UnitType ut = (UnitType)type;
 
-		SG_DEBUGMGR.DrawTextFix(dx, dy, str);
-		dy += 15;
+			std::string str = std::to_string(centerID) + "-" + ut.getName() + ":" + std::to_string(count);
+
+			SG_DEBUGMGR.DrawTextFix(dx, dy, str);
+			dy += 15;
+		}
+		centerID++;
+
 	}
 }
 
@@ -166,9 +173,9 @@ bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos, int w
 	}
 	else
 	{
-		dists.push_back(160);
-		dists.push_back(220);
-		dists.push_back(280);
+		dists.push_back(170);
+		dists.push_back(240);
+		dists.push_back(300);
 	};
 
 	std::vector<std::pair<float, float>> ptList;
@@ -188,9 +195,12 @@ bool SituationManager::GetOpenPositionNear(Position pos, Position& outPos, int w
 	{
 		float curX, curY;
 		Rotate(pos.x, pos.y, pos.x + p.first, pos.y, p.second, curX, curY);
-		Position curPos(curX-32, curY-32);
+		const Position curPos(curX, curY);
 
-		if (!IsBuildable(TilePosition(curPos), w, h))
+		TilePosition curTPos = TilePosition(curPos);
+		curTPos.x -= w / 2;
+		curTPos.y -= h / 2;
+		if (!IsBuildable(curTPos, w, h))
 			continue;
 
 		//resource skip
@@ -289,13 +299,6 @@ bool SituationManager::IsBuildable(TilePosition pos, int w, int h, bool isNeedCr
 
 void SituationManager::RegisterUnit(const BigGoal* goal, Unit unit)
 {
-	assert(!IsUnitRegistered(unit));
-
-	if (!unit)
-	{
-
-	}
-
 	m_regUnits[goal].insert(unit);
 ;}
 
@@ -310,7 +313,6 @@ void SituationManager::UnregisterUnit(Unit unit)
 		break;
 	}
 
-	assert(!IsUnitRegistered(unit));
 
 }
 
@@ -420,29 +422,34 @@ int SituationManager::GetValidSupply()
 	return Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed();
 }
 
-void SituationManager::AddDevUnit(UnitType unit, int count)
+void SituationManager::AddDevUnit(Unit center, UnitType unit, int count)
 {
-	if (unit == UnitTypes::Zerg_Spawning_Pool)
-		int a = 234;
-
-	m_devUnits[unit]+=count;
+	m_devUnits[center][unit] += count;
 }
-void SituationManager::RemoveDevUnit(UnitType u, int count)
+void SituationManager::RemoveDevUnit(Unit center,UnitType u, int count)
 {
-	m_devUnits[u]-=count;
+	m_devUnits[center][u]-=count;
 
-	if(m_devUnits[u]<0)
-		m_devUnits[u] = 0;
+	if(m_devUnits[center][u]<0)
+		m_devUnits[center][u] = 0;
 }
 
 
 
-int SituationManager::IsDeveloping(UnitType type)
+int SituationManager::IsDeveloping(UnitType type,Unit center)
 {
-	if (m_devUnits[type] > 0)
-		return m_devUnits[type];
+	if (center)
+	{
+		return m_devUnits[center][type];
+	}
 
-	return 0;
+	int total = 0;
+	for (auto it = m_devUnits.begin(); it != m_devUnits.end(); it++)
+	{
+		total += it->second[type];
+	}
+
+	return total;
 }
 
 void SituationManager::GetUnitPrice(UnitType type, int& mineral, int& gas)

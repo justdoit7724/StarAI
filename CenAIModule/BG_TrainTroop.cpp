@@ -32,7 +32,7 @@ BG_TrainTroop::BG_TrainTroop(Unit rd, std::vector<Unit> units, std::vector<float
 	}*/
 }
 
-void BG_TrainTroop::Debug()
+void BG_TrainTroop::Debug(int depth)
 {
 	SG_DEBUGMGR.DrawTextScn(m_rd->getPosition(), ID());
 	SG_DEBUGMGR.DrawBox(m_rd->getPosition(), 80, 25, m_debugColor);

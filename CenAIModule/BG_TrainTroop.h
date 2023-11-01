@@ -6,7 +6,7 @@ class BG_TrainTroop :
 public:
     BG_TrainTroop(Unit rd, std::vector<Unit> units, std::vector<float> weighs);
 
-    void Debug() override;
+    void Debug(int depth = 0) override;
 
 
 private:

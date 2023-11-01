@@ -16,16 +16,15 @@ class BG_Develop :
     public BigGoal
 {
 public:
-    BG_Develop(Unit resourceDepot, std::vector<UnitType> units, std::vector<int> uCounts, float e);
+    BG_Develop(Unit resourceDepot, std::vector<UnitType> units, std::vector<int> uCounts, bool isOptimizedAtt=false);
 
-    void Debug() override;
+    void Debug(int depth = 0) override;
 
     std::string ID()const override;
 
 
 
     const Unit m_resourceDepot;
-    const float m_e;
 
     static std::string ID(BG_DevelopeKind kind);
 

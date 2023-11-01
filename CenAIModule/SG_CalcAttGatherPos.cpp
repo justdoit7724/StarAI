@@ -53,7 +53,7 @@ void SG_CalcAttGatherPos::Update(const Controller* con)
 	}
 }
 
-void SG_CalcAttGatherPos::Debug()
+void SG_CalcAttGatherPos::Debug(int depth)
 {
 	SG_DEBUGMGR.DrawTextScn(m_attPos, "CalcAttGatherPos");
 	SG_DEBUGMGR.DrawBox(m_attPos, 90, 30, m_debugColor);

@@ -39,7 +39,7 @@ void BG_Attack::Update(const Controller* con)
 }
 
 
-void BG_Attack::Debug()
+void BG_Attack::Debug(int depth)
 {
 	auto scnPos = Broodwar->getScreenPosition();
 

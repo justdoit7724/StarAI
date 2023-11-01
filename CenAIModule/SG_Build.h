@@ -11,7 +11,7 @@ public:
     ~SG_Build();
 
     void Update(const Controller* con) override;
-    void Debug()override;
+    void Debug(int depth = 0)override;
     void Init()override;
 
 private:

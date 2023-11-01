@@ -51,7 +51,7 @@ void SG_Recruit::Update(const Controller* con)
 	}
 }
 
-void SG_Recruit::Debug()
+void SG_Recruit::Debug(int depth)
 {
 	auto pos = m_passData->dbBigGoalPos;
 	pos.y += 32;

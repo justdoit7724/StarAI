@@ -7,6 +7,7 @@
 #include "BG_Attack.h"
 #include "SituationManager.h"
 #include "DebugManager.h"
+#include "StopWatch.h"
 
 using namespace BWAPI;
 using namespace Filter;
@@ -49,8 +50,9 @@ void CenAIModule::onEnd(bool isWinner)
 
 void CenAIModule::onFrame()
 {
-    Broodwar->drawTextScreen(200, 0, "FPS: %d", Broodwar->getFPS());
-    Broodwar->drawTextScreen(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
+    if (Broodwar->isPaused())
+        return;
+    Broodwar->drawTextScreen(700, 0, "FPS: %d", Broodwar->getFPS());
 
 #ifndef _DEBUG
     if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0)
@@ -70,6 +72,25 @@ void CenAIModule::onFrame()
 
 void CenAIModule::onSendText(std::string text)
 {
+    if (text == "n")
+    {
+        SG_MAP.TurnOffDisplay();
+    }
+    if (text == "terrain")
+    {
+        SG_MAP.TurnOffDisplay();
+        SG_MAP.isDisplayTerrain = true;
+    }
+    else if (text == "pt")
+    {
+        SG_MAP.TurnOffDisplay();
+        SG_MAP.isDisplayPts = true;
+    }
+    else if (text == "att")
+    {
+        SG_MAP.TurnOffDisplay();
+        SG_MAP.isDisplayAtt = true;
+    }
 }
 
 void CenAIModule::onReceiveText(BWAPI::Player player, std::string text)

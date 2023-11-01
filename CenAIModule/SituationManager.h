@@ -41,9 +41,9 @@ public:
 	int CurGas();
 	int GetValidSupply();
 
-	void AddDevUnit(UnitType u, int count=1);
-	void RemoveDevUnit(UnitType u, int count=1);
-	int IsDeveloping(UnitType type);
+	void AddDevUnit(Unit center, UnitType u, int count=1);
+	void RemoveDevUnit(Unit center, UnitType u, int count=1);
+	int IsDeveloping(UnitType type,Unit center=nullptr);
 
 	void GetUnitPrice(UnitType type, int& mineral, int& gas);
 
@@ -59,7 +59,7 @@ private:
 	Unit m_base;
 
 	std::unordered_map<const BigGoal*, std::unordered_set<Unit>> m_regUnits;
-	std::unordered_map<int, int> m_devUnits;
+	std::unordered_map<Unit, std::unordered_map<int, int>> m_devUnits;
 
 	StopWatch* m_secTimer;
 	std::vector<int> m_minerals;

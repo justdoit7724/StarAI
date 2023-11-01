@@ -3,23 +3,19 @@
 
 class StopWatch;
 
-class TH_HydraBase :
+class TH_FastAttBase :
     public Theme
 {
 public:
-    TH_HydraBase();
-    ~TH_HydraBase() override;
+    TH_FastAttBase();
+    ~TH_FastAttBase() override;
     void Update(const Controller* con)override;
 
     static std::string GetID();
 
 private:
 
+    int m_totalTroopCount;
     StopWatch* m_timer;
-    StopWatch* m_timer2;
-    int m_plCompensate;
-    int m_hydraCount;
-    int m_curRD;
-
 };
 

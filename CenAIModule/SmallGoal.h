@@ -7,6 +7,7 @@ class SmallGoal :
 public:
     SmallGoal() = delete;
     SmallGoal(GoalIO* passData, Color debugCol);
+    virtual ~SmallGoal() override;
 
 protected:
     GoalIO* m_passData;

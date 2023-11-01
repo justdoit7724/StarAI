@@ -14,11 +14,6 @@ SG_Train::SG_Train(GoalIO* passData)
 
 SG_Train::~SG_Train()
 {
-    for (auto devUnit : m_passData->devs[this])
-    {
-        SG_SITU.RemoveDevUnit(devUnit.first, devUnit.second);
-    }
-
     delete m_timer;
 }
 
@@ -36,11 +31,12 @@ void SG_Train::Update(const Controller* con)
 
         if (m_count )
         {
-            con->Train(m_trainBuilding, m_type);
-
-            m_count-= dec;
-            m_timer->reset();
-            m_stage++;
+            if (con->Train(m_trainBuilding, m_type))
+            {
+                m_count -= dec;
+                m_timer->reset();
+                m_stage++;
+            }
 
         }
         
@@ -70,6 +66,17 @@ void SG_Train::Update(const Controller* con)
 
             m_eggs.push_back(e);
             break;
+        }
+
+        for (int i=0; i<m_eggs.size(); )
+        {
+            if (!m_eggs[i]->isMorphing())
+            {
+                SG_SITU.UnregisterUnit(m_eggs[i]);
+                m_eggs.erase(m_eggs.begin() + i);
+            }
+            else
+                i++;
         }
 
         if (m_eggs.empty())
@@ -106,7 +113,7 @@ void SG_Train::Update(const Controller* con)
     }
 }
 
-void SG_Train::Debug()
+void SG_Train::Debug(int depth)
 {
     Position pos = m_passData->dbBigGoalPos;
     pos.y += 32;
@@ -136,9 +143,8 @@ void SG_Train::Init()
     m_type = m_passData->unitTypes[this][0];
     m_count = m_passData->iValues[this][0];
 
-    for (auto devUnit : m_passData->devs[this])
-    {
-        SG_SITU.AddDevUnit(devUnit.first, devUnit.second);
-    }
+    if (m_passData->devs.find(this) != m_passData->devs.end())
+        SG_SITU.AddDevUnit(m_passData->devCenter, m_passData->devs[this].first, m_passData->devs[this].second);
+    
 
 }

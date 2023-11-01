@@ -65,7 +65,7 @@ void SG_StartWork::Update(const Controller* con)
 
 }
 
-void SG_StartWork::Debug()
+void SG_StartWork::Debug(int depth)
 {
     Position pos = m_passData->dbBigGoalPos;
     pos.y += 32;

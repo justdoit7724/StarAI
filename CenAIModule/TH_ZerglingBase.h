@@ -14,7 +14,7 @@ public:
 
     void Update(const Controller* con) override;
 
-    static std::string ID();
+    static std::string GetID();
 
 private:
     StopWatch* m_timer;
@@ -22,5 +22,6 @@ private:
 
     int m_zerglingCount;
     int m_plCompensate;
+    int m_curRD;
 };
 

@@ -15,7 +15,7 @@ private:
 	{
 		if (m_mainTheme)
 		{
-			if (T::ID() != m_mainTheme->ID)
+			if (T::GetID() != m_mainTheme->ID)
 			{
 				delete m_mainTheme;
 

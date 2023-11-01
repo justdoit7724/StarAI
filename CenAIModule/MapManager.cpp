@@ -20,6 +20,8 @@ float GetAttWeight(Unit unit, int x, int y)
 MapManager::MapManager()
     :m_isFoundExpansion(false)
 {
+    TurnOffDisplay();
+
     auto mapW = Broodwar->mapWidth();
     auto mapH = Broodwar->mapHeight();
 
@@ -359,8 +361,15 @@ void MapManager::Update()
         m_wPts->Swap();
     }
     break;
+    }
 
-    case 32:
+    updateStep++;
+
+
+    static long long terrainStep = 0;
+    switch (terrainStep++%4)
+    {
+    case 0:
         for (int y = 0; y < m_height; ++y)
         {
             for (int x = 0; x < m_Width; ++x)
@@ -370,7 +379,7 @@ void MapManager::Update()
         }
 
         break;
-    case 33:
+    case 1:
     {
         for (auto u : Broodwar->getAllUnits())
         {
@@ -379,7 +388,7 @@ void MapManager::Update()
     }
     break;
 
-    case 34:
+    case 2:
     {
         for (int i = 0; i < 30 && m_tmpUnits.size(); ++i)
         {
@@ -415,16 +424,14 @@ void MapManager::Update()
 
         if (!m_tmpUnits.empty())
         {
-            updateStep--;
+            terrainStep--;
         }
     }
     break;
-    case 35:
+    case 3:
         m_terrain->Swap();
         break;
     }
-
-    updateStep++;
     
 
     //location update
@@ -602,7 +609,7 @@ void MapManager::Update()
                     break;
                 }
             }
-            if (!isDelete && m_expPts[i].getDistance(m_expGas->getPosition()) < (32*6.5))
+            if (!isDelete && m_expPts[i].getDistance(m_expGas->getPosition()) < (32*7))
             {
                 isDelete = true;
             }
@@ -641,7 +648,12 @@ void MapManager::Update()
     }
    
 
-
+    if(isDisplayAtt)
+        DisplayAtt();
+    if(isDisplayTerrain)
+        DisplayTerrain();
+    if (isDisplayPts)
+        DisplayPts();
 }
 
 void MapManager::DisplayAtt()
@@ -807,6 +819,47 @@ void MapManager::DisplayPts()
         Broodwar->drawCircle(BWAPI::CoordinateType::Screen, rpPos.x, rpPos.y, distThreshold, Color(r, g, b));
 
     }
+}
+
+void MapManager::DisplayBuildableCheck()
+{
+    auto srnPos = Broodwar->getScreenPosition();
+
+    RECT screenRect;
+    const HWND hDesktop = GetDesktopWindow();
+    GetWindowRect(hDesktop, &screenRect);
+
+    for (int y = 0; y < screenRect.bottom / 32 - 1; ++y)
+    {
+        for (int x = 0; x < screenRect.right / 32 - 1; ++x)
+        {
+
+            TilePosition pos = TilePosition(srnPos);
+            pos.x += x;
+            pos.y += y;
+
+            if (pos.x < 0 || pos.y < 0 ||
+                pos.x >= m_WeightWidth || pos.y >= m_WeightHeight)
+                continue;
+
+            auto col = Colors::Black;
+
+            if(SG_SITU.IsBuildable(pos, 3, 3))
+                Broodwar->drawBox(BWAPI::CoordinateType::Screen, x * 32, y * 32, x * 32 + 32, y * 32 + 32, Colors::Green);
+            else
+                Broodwar->drawBox(BWAPI::CoordinateType::Screen, x * 32, y * 32, x * 32 + 32, y * 32 + 32, Colors::Red);
+
+        }
+    }
+}
+
+void MapManager::TurnOffDisplay()
+{
+    isDisplayAtt=false;
+    isDisplayDef = false;
+    isDisplayTerrain = false;
+    isDisplayTotal = false;
+    isDisplayPts = false;
 }
 
 Position MapManager::GetExpPt()

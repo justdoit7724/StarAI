@@ -54,7 +54,7 @@ void SG_Gather::Update(const Controller* con)
 	}
 }
 
-void SG_Gather::Debug()
+void SG_Gather::Debug(int depth)
 {
 	SG_DEBUGMGR.DrawTextScn(m_pos, "Gather");
 	SG_DEBUGMGR.DrawBox(m_pos, 90, 30, m_debugColor);

@@ -17,7 +17,7 @@ public:
 
 	virtual void Update(const Controller* con) = 0;
 	virtual void Draw() {}
-	virtual void Debug();
+	virtual void Debug(int depth=0);
 
 	virtual void GetParam(int index, void*& data, int& size);
 
@@ -48,7 +48,8 @@ struct GoalIO
 	std::unordered_map<const SmallGoal* ,std::vector<float>> fValues;
 	std::unordered_map<const SmallGoal* ,std::vector<bool>> bValues;
 	std::unordered_map<const SmallGoal*, const SmallGoal*> nextSmallGoalPtr;
-	std::unordered_map<const SmallGoal*, std::vector<std::pair<int, int>>> devs;
+	std::unordered_map<const SmallGoal*, std::pair<int, int>> devs;
+	Unit devCenter;
 	int count;
 
 	Position dbBigGoalPos;

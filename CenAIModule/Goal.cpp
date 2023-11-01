@@ -21,7 +21,7 @@ int Goal::Finished()
 	return m_result!=GOAL_RESULT_PROCESSING;
 }
 
-void Goal::Debug()
+void Goal::Debug(int depth)
 {
 }
 
