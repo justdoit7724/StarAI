@@ -29,7 +29,7 @@ TH_ZerglingBase::~TH_ZerglingBase()
 
 void TH_ZerglingBase::Update(const Controller* con)
 {
-	if (SG_SITU.GetPL() < -600 || m_timer2->elapsed()>80)
+	if (SG_SITU.GetPL() < -500 || m_timer2->elapsed()>50)
 	{
 		m_isFinished = true;
 		return;

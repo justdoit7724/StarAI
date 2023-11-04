@@ -90,6 +90,7 @@ void SG_Build::Update(const Controller* con)
             m_type.gasPrice() <= SG_SITU.CurGas())
         {
             m_stage++;
+            m_timer->reset();
         }
        
 
@@ -110,22 +111,11 @@ void SG_Build::Update(const Controller* con)
 
         if (m_worker->getPosition().getDistance(m_pos) < m_type == UnitTypes::Zerg_Extractor? 20 : 10)
         {
-            TilePosition buildPos;
-            buildPos.x = (m_pos.x - m_type.width() / 2)/32;
-            buildPos.y = (m_pos.y - m_type.height() / 2)/32;
-
-            if (con->Build(m_worker, m_type, buildPos))
-            {
-                m_timer->reset();
-                m_stage++;
-
-                SG_SITU.UnregisterUnit(m_worker);
-                m_worker = nullptr;
-            }
-
+            m_stage++;
+            m_timer->reset();
         }
 
-        if (m_timer->elapsed() > 5)
+        if (m_timer->elapsed() > 10)
         {
             SG_LOGMGR.Record("GOAL_EXCEPT", "not buildable - build");
             m_result = GOAL_RESULT_FAILED;
@@ -135,13 +125,37 @@ void SG_Build::Update(const Controller* con)
         break;
     case 5:
     {
+        TilePosition buildPos;
+        buildPos.x = (m_pos.x - m_type.width() / 2) / 32;
+        buildPos.y = (m_pos.y - m_type.height() / 2) / 32;
+
+        if (con->Build(m_worker, m_type, buildPos))
+        {
+            m_timer->reset();
+            m_stage++;
+
+            SG_SITU.UnregisterUnit(m_worker);
+            m_worker = nullptr;
+        }
+
+        if (m_timer->elapsed() > 3)
+        {
+            SG_LOGMGR.Record("GOAL_EXCEPT", "not buildable - build");
+            m_result = GOAL_RESULT_FAILED;
+            break;
+        }
+    }
+        break;
+    case 6:
+    {
+
         if (m_timer->elapsed() > 1.5)
         {
             m_stage++;
         }
     }
     break;
-    case 6:
+    case 7:
     {
         auto buildings = SG_SITU.AllUnitsinRange(true, TilePosition(m_pos), 50);
 
@@ -169,7 +183,7 @@ void SG_Build::Update(const Controller* con)
         }
     }
         break;
-    case 7:
+    case 8:
 
         if (!m_build->exists())
         {

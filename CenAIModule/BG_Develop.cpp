@@ -227,7 +227,7 @@ BG_Develop::BG_Develop(Unit resourceDepot, std::vector<UnitType> units, std::vec
 
 		sunkenCount-=SG_SITU.IsDeveloping(UnitTypes::Zerg_Sunken_Colony, m_resourceDepot);
 
-		if (sunkenCount < 3)
+		if (sunkenCount < 2)
 		{
 			auto creepCount = SG_SITU.UnitsInRange(true, m_resourceDepot->getTilePosition(), UnitTypes::Zerg_Creep_Colony, 250);
 			if (creepCount.size())

@@ -876,11 +876,11 @@ bool MapManager::GetAddExpPt(Position& pos)
 {
     auto center = (m_expPt + SG_SITU.GetBase()->getPosition()) / 2;
 
-    if (SG_SITU.GetOpenPositionNear(center, pos,4,3, 100))
+    if (SG_SITU.GetOpenPositionNear(center, pos,4,3, 40))
         return true;
-    if (SG_SITU.GetOpenPositionNear(center, pos, 4, 3, 200))
+    if (SG_SITU.GetOpenPositionNear(center, pos, 4, 3, 90))
         return true;
-    if (SG_SITU.GetOpenPositionNear(center, pos, 4, 3, 300))
+    if (SG_SITU.GetOpenPositionNear(center, pos, 4, 3, 150))
         return true;
 
     return false;

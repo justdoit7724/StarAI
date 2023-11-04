@@ -22,7 +22,7 @@ public:
 	int OpenMinerals(Unit resourceDepot);
 	
 	bool GetOpenPositionNear(Position pos, Position& outPos, int w, int h, double dist=-1);
-	Unit GetGasNear(Position pos, int range=300);
+	Unit GetGasNear(Position pos, int range=400);
 	std::vector<Unit> GetMineralsNear(Position pos, int range = 300);
 	bool IsBuildable(TilePosition pos, int w, int h, bool isNeedCreep=true);
 

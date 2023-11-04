@@ -24,14 +24,14 @@ TH_HydraBase::~TH_HydraBase()
 void TH_HydraBase::Update(const Controller* con)
 {
 	auto mPL = SG_SITU.GetPL() + m_plCompensate;
-	if (mPL < -150)
+	if (mPL < -200)
 	{
-		m_hydraCount += 2;
+		m_hydraCount += 1;
 		m_plCompensate += 150;
 	}
-	else if(mPL>150)
+	else if(mPL>200)
 	{
-		m_hydraCount -= 2;
+		m_hydraCount -= 1;
 		m_plCompensate -= 150;
 		if (m_hydraCount < 12)
 			m_hydraCount = 12;

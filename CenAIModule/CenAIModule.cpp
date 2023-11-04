@@ -53,11 +53,11 @@ void CenAIModule::onFrame()
     if (Broodwar->isPaused())
         return;
     Broodwar->drawTextScreen(700, 0, "FPS: %d", Broodwar->getFPS());
-
-#ifndef _DEBUG
-    if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0)
-        return;
-#endif
+//
+//#ifndef _DEBUG
+//    if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0)
+//        return;
+//#endif
 
     Goal::ResetGlobalDebug();
 

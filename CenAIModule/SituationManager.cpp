@@ -80,26 +80,30 @@ void SituationManager::Update()
 			m_plResourceTotals.erase(m_plResourceTotals.begin());
 	}
 
-	int dx = 10;
-	int dy = 130;
-	int centerID = 1;
-	for (auto& [center,units] : m_devUnits)
-	{
-		for (auto& [type, count] : units)
-		{
-			if (count <= 0)
-				continue;
+//#ifdef _DEBUG
+//	int dx = 10;
+//	int dy = 130;
+//	int centerID = 1;
+//	for (auto& [center, units] : m_devUnits)
+//	{
+//		for (auto& [type, count] : units)
+//		{
+//			if (count <= 0)
+//				continue;
+//
+//			UnitType ut = (UnitType)type;
+//
+//			std::string str = std::to_string(centerID) + "-" + ut.getName() + ":" + std::to_string(count);
+//
+//			SG_DEBUGMGR.DrawTextFix(dx, dy, str);
+//			dy += 15;
+//		}
+//		centerID++;
+//
+//	}
+//#endif // _DEBUG
 
-			UnitType ut = (UnitType)type;
-
-			std::string str = std::to_string(centerID) + "-" + ut.getName() + ":" + std::to_string(count);
-
-			SG_DEBUGMGR.DrawTextFix(dx, dy, str);
-			dy += 15;
-		}
-		centerID++;
-
-	}
+	
 }
 
 bool SituationManager::IsExist(bool isAlly, BWAPI::UnitType type)

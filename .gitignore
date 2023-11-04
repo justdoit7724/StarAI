@@ -334,3 +334,6 @@ ASALocalRun/
 .mfractor/
 
 *log.txt
+*.txt
+*.log
+*.log
